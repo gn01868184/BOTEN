@@ -7,10 +7,8 @@ public class Test {
 		sc.jsonSchema();
 		System.out.println("jsonPath:");
 		sc.jsonPath();
-		System.out.println("jsonParse:");
-		sc.jsonParse();
-		System.out.println("chatbotFlow:");
-		sc.chatbotFlow();
+		System.out.println("checkChatbotFlow:");
+		sc.checkChatbotFlow();
 		
 	}
 }
