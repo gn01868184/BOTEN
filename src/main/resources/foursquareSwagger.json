@@ -11,6 +11,13 @@
           "/v2/venues/explore",
           "/v2/venues/suggestcompletion"
         ]
+      },      
+      {
+        "flowName": "suggeasstVenues",
+        "flow": [
+          "/v2/venues/exploress",
+          "/v2/venues/suggestcompletion"
+        ]
       }
    ]
   },
