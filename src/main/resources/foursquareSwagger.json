@@ -6,17 +6,17 @@
     "version": "0.1",
     "x-chatbotFlow": [
       {
-        "flowName": "suggestVenues",
+        "flowName": "flow1",
         "flow": [
           "/v2/venues/explore",
           "/v2/venues/suggestcompletion"
         ]
       },      
       {
-        "flowName": "suggeasstVenues",
+        "flowName": "suggeastVenues",
         "flow": [
-          "/v2/venues/exploress",
-          "/v2/venues/suggestcompletion"
+          "/v2/venues/explore",
+          "/v2/venues/test2"
         ]
       }
    ]
@@ -99,7 +99,7 @@
         ],
         "x-chatbotFlow": [
           {
-            "flowName": "suggestVenues",
+            "flowName": "suggeastVenues",
             "responseToSlots": [
               {
                 "parameterName": "venueId",
@@ -229,7 +229,7 @@
         ],
         "x-chatbotFlow": [
           {
-            "flowName": "suggestVenues",
+            "flowName": "suggeastVenues",
             "getSlots": [
               {
                 "in": "path",
