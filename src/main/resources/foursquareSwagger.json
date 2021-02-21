@@ -34,7 +34,7 @@
           {
             "name": "ll",
             "in": "query",
-            "required": false,
+            "required": true,
             "style": "form",
             "explode": true,
             "schema": {
@@ -106,11 +106,20 @@
                 "jsonPath": "$..id"
               }
             ]
+          },
+                    {
+            "flowName": "flow2",
+            "responseToSlots": [
+              {
+                "parameterName": "v",
+                "jsonPath": "1"
+              }
+            ]
           }
         ],
         "x-bot-utter": [
           {
-            "parameterName": "query",
+            "parameterName": "query2",
             "utter": "What do you want to query ?"
           },
           {
@@ -234,6 +243,19 @@
               {
                 "in": "path",
                 "parameterName": "venueId",
+                "type": "Single"
+              },              {
+                "in": "path",
+                "parameterName": "venueId2",
+                "type": "Single"
+              }
+            ]
+          },          {
+            "flowName": "gu",
+            "getSlots": [
+              {
+                "in": "path",
+                "parameterName": "test",
                 "type": "Single"
               }
             ]
