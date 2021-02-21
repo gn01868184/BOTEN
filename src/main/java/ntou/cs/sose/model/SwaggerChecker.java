@@ -20,19 +20,21 @@ import com.jayway.jsonpath.PathNotFoundException;
 
 public class SwaggerChecker {
 	JSONObject jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/schema.json")));
-	JSONObject swagger = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/foursquareSwagger.json")));
+	JSONObject swagger;
 	Schema schema = SchemaLoader.load(jsonSchema);
 	HashMap<String, Object> errorJson = new HashMap<String, Object>();
 	ArrayList<String> errorMessages = new ArrayList<String>();
 
-	public String sc() {
+	public HashMap<String, Object> sc(JSONObject res) {
+		swagger = res;
 		if (jsonSchema()) {
 
 		}
 		checkInfo();
 		checkPaths();
 		System.out.println(errorMessages);
-		return null;
+		errorJson.put("error", errorMessages);
+		return errorJson;
 	}
 
 	public boolean jsonSchema() {
@@ -62,8 +64,8 @@ public class SwaggerChecker {
 						JsonPath.read(swagger.toString(), "$.paths." + pathsArr.get(i));
 					} catch (PathNotFoundException e) {
 						System.out.println(e.getMessage());
-						errorMessages.add("#/info/x-chatbotFlow/" + i + "/flow: [" + pathsArr.get(i)
-								+ "] path not found in Swagger");
+						errorMessages.add("#/info/x-chatbotFlow/flow: The path of [" + pathsArr.get(i)
+								+ "] not found in Swagger");
 					}
 				}
 			}
@@ -79,58 +81,16 @@ public class SwaggerChecker {
 			JSONObject pathObj = paths.getJSONObject(path);
 			try {
 				JSONObject getObj = pathObj.getJSONObject("get");
-				// 檢查x-chatbotFlow
-				try {
-					org.json.JSONArray chatbotFlow = getObj.getJSONArray("x-chatbotFlow");
-					HashMap<String, Object> allFlow = getChatbotFlow();
-					for (int j = 0; j < chatbotFlow.length(); j++) {
-						boolean checkFlowName = false;
-						boolean checkPath = false;
-						JSONObject flowObj = (JSONObject) chatbotFlow.get(0);
-						// 檢查與info對應
-						for (Object flowName : allFlow.keySet()) {
-							if (flowObj.getString("flowName").equals(flowName)) {
-								ArrayList flowPathsArr = (ArrayList) allFlow.get(flowName);
-								for (int z = 0; z < flowPathsArr.size(); z++) {
-									if (flowPathsArr.get(z).equals(path)) {
-										checkPath = true;
-										break;
-									}
-								}
-
-								System.out.println(checkPath);
-								checkFlowName = true;
-								break;
-							}
-						}
-						if (!checkFlowName) {
-							errorMessages.add("#/paths/" + path + "/x-chatbotFlow/" + j + "/flowName: Unfilled ["
-									+ flowObj.getString("flowName") + "] in info/x-chatbotFlow/{int}/flowName");
-						}
-						if (!checkPath) {
-							errorMessages.add("#/paths/" + path + "/x-chatbotFlow/" + j + ": Unfilled [" + path
-									+ "] not found in " + flowObj.getString("flowName"));
-						}
-						// 檢查jsonPath
-						try {
-							ArrayList JsonPathArr = JsonPath.read(flowObj.toString(), "$..jsonPath");
-							if (!JsonPathArr.isEmpty()) {
-								for (int k = 0; k < JsonPathArr.size(); k++) {
-									String jsonPath = (String) JsonPathArr.get(k);
-									if (!checkJsonPath(jsonPath)) {
-										errorMessages.add("#/paths/" + path + "/x-chatbotFlow/" + j
-												+ "/responseToSlots/" + k + "/jsonPath: Not jsonPath");
-									}
-								}
-							}
-						} catch (ClassCastException e) {
-							System.out.println(e.getMessage());
-						}
-					}
-				} catch (JSONException e) {
-					System.out.println(e.getMessage());
-				}
-
+				// check chatbotFlow
+				chatbotFlow(path, getObj);
+				// check bot-utter
+				checkUtterAndEntity(path, getObj, "x-bot-utter");
+				// check user-entity
+				checkUtterAndEntity(path, getObj, "x-user-entity");
+				// check bot-utter user-entity 對應
+				checkUtterAndEntityCorrespond(path, getObj);
+				// check jsonpPath-result
+				checkResult(path, getObj);
 			} catch (JSONException e) {
 				System.out.println(e.getMessage());
 			}
@@ -152,6 +112,159 @@ public class SwaggerChecker {
 			allFlow.put(flowName, pathsArr);
 		}
 		return allFlow;
+	}
+
+	public void chatbotFlow(String path, JSONObject getObj) {
+		// 檢查x-chatbotFlow
+		try {
+			org.json.JSONArray chatbotFlow = getObj.getJSONArray("x-chatbotFlow");
+			HashMap<String, Object> allFlow = getChatbotFlow();
+			for (int j = 0; j < chatbotFlow.length(); j++) {
+				boolean checkFlowName = false;
+				boolean checkPath = false;
+				JSONObject flowObj = (JSONObject) chatbotFlow.get(j);
+				// 檢查與info對應
+				for (Object flowName : allFlow.keySet()) {
+					if (flowObj.getString("flowName").equals(flowName)) {
+						ArrayList flowPathsArr = (ArrayList) allFlow.get(flowName);
+						for (int z = 0; z < flowPathsArr.size(); z++) {
+							if (flowPathsArr.get(z).equals(path)) {
+								checkPath = true;
+								break;
+							}
+						}
+						checkFlowName = true;
+						break;
+					}
+				}
+				if (!checkFlowName) {
+					errorMessages.add("#/paths/" + path + "/x-chatbotFlow/flowName: Unfilled ["
+							+ flowObj.getString("flowName") + "] in info/x-chatbotFlow/{int}/flowName");
+				}
+				if (!checkPath) {
+					errorMessages.add("#/paths/" + path + "/x-chatbotFlow/: Unfilled [" + path + "] not found in "
+							+ flowObj.getString("flowName"));
+				}
+				// 檢查responseToSlots_jsonPath
+				try {
+					ArrayList JsonPathArr = JsonPath.read(flowObj.toString(), "$..jsonPath");
+					if (!JsonPathArr.isEmpty()) {
+						for (int k = 0; k < JsonPathArr.size(); k++) {
+							String jsonPath = (String) JsonPathArr.get(k);
+							if (!checkJsonPath(jsonPath)) {
+								errorMessages.add("#/paths/" + path + "/x-chatbotFlow/responseToSlots/jsonPath: ["
+										+ jsonPath + "] is not jsonPath");
+							}
+						}
+					}
+				} catch (ClassCastException e) {
+					System.out.println(e.getMessage());
+				}
+				// 檢查getSlots_parameterName
+				try {
+					ArrayList flowName = JsonPath.read(flowObj.toString(), "$..[?(@.getSlots)].flowName");
+					ArrayList resParameterName = JsonPath.read(flowObj.toString(), "$..[?(@.getSlots)]..parameterName");
+					if (!resParameterName.isEmpty()) {
+						for (int k = 0; k < resParameterName.size(); k++) {
+							String par = (String) resParameterName.get(k);
+							if (!checkParameterName(path, par)) {
+								errorMessages.add(
+										"#/paths/" + path + "/x-chatbotFlow/getSlots/parameterName: The parameter of ["
+												+ par + "] not found in Swagger");
+							}
+							if (!checkFlowParameterName((String) flowName.get(0), par)) {
+								errorMessages.add(
+										"#/paths/" + path + "/x-chatbotFlow/getSlots/parameterName: The parameter of ["
+												+ par + "] not found in responseToSlots");
+							}
+						}
+					}
+				} catch (ClassCastException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void checkUtterAndEntity(String path, JSONObject getObj, String xNmae) {
+		// 檢查x-bot-utter和x-user-entity 參數
+		try {
+			org.json.JSONArray xArr = getObj.getJSONArray(xNmae);
+			ArrayList parArr = JsonPath.read(xArr.toString(), "$..parameterName");
+			ArrayList allRequireParameter = getRequireParameter(path);
+			// 檢查RequireParameter
+			for (int j = 0; j < allRequireParameter.size(); j++) {
+				String requireParameter = (String) allRequireParameter.get(j);
+				if (!parArr.contains(requireParameter)) {
+					errorMessages.add("#/paths/" + path + "/" + xNmae + "/parameterName: The required parameter ["
+							+ requireParameter + "] is not filled");
+				}
+			}
+			// 檢查Swagger內是否有這個參數
+			for (int j = 0; j < parArr.size(); j++) {
+				String parameter = (String) parArr.get(j);
+				if (!checkParameterName(path, parameter)) {
+					errorMessages.add("#/paths/" + path + "/" + xNmae + "/parameterName: The parameter of [" + parameter
+							+ "] not found in Swagger");
+				}
+			}
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void checkUtterAndEntityCorrespond(String path, JSONObject getObj) {
+		// 檢查x-bot-utter和x-user-entity 對應
+		try {
+			org.json.JSONArray botUtter = getObj.getJSONArray("x-bot-utter");
+			org.json.JSONArray userEntity = getObj.getJSONArray("x-user-entity");
+			ArrayList botParArr = JsonPath.read(botUtter.toString(), "$..parameterName");
+			ArrayList userParArr = JsonPath.read(userEntity.toString(), "$..parameterName");
+			// 檢查x-bot-utter填寫的參數x-user-entity是否有填
+			for (int j = 0; j < botParArr.size(); j++) {
+				String botParameter = (String) botParArr.get(j);
+				if (!userParArr.contains(botParameter)) {
+					errorMessages
+							.add("#/paths/" + path + "/x-user-entity/parameterName: Unfilled [" + botParameter + "]");
+				}
+			}
+			// 檢查x-user-entity填寫的參數x-bot-utter是否有填
+			for (int j = 0; j < botParArr.size(); j++) {
+				String userParameter = (String) userParArr.get(j);
+				if (!botParArr.contains(userParameter)) {
+					errorMessages
+							.add("#/paths/" + path + "/x-bot-utter/parameterName: Unfilled [" + userParameter + "]");
+				}
+			}
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void checkResult(String path, JSONObject getObj) {
+		// 檢查x-bot-jsonpPath-result
+		try {
+			JSONObject result = getObj.getJSONObject("x-bot-jsonpPath-result");
+			// 檢查jsonPath
+			try {
+				ArrayList JsonPathArr = JsonPath.read(result.toString(), "$..jsonPath");
+				if (!JsonPathArr.isEmpty()) {
+					for (int k = 0; k < JsonPathArr.size(); k++) {
+						String jsonPath = (String) JsonPathArr.get(k);
+						if (!checkJsonPath(jsonPath)) {
+							errorMessages.add("#/paths/" + path + "/x-bot-jsonpPath-result/result/jsonPath: ["
+									+ jsonPath + "] is not jsonPath");
+						}
+					}
+				}
+			} catch (ClassCastException e) {
+				System.out.println(e.getMessage());
+			}
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public ArrayList getAllPath() {
@@ -190,11 +303,42 @@ public class SwaggerChecker {
 		}
 	}
 
-	public Boolean checkParameterName(String path, String param) {
-		// 驗證ParameterName是否在Swagger內
-		// $.paths.{path}..parameters..name
+	public Boolean checkParameterName(String path, String params) {
+		Boolean checkPar = false;
+		try {
+			ArrayList parArr = JsonPath.read(swagger.toString(), "$.paths." + path + "..parameters..name");
+			for (int i = 0; i < parArr.size(); i++) {
+				if (parArr.get(i).equals(params)) {
+					return true;
+				}
+			}
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		}
 		return false;
 	}
-	// 拿到所有的requare參數
-	// $.paths./v2/venues/suggestcompletion.[?(@.required==true)].name
+
+	public Boolean checkFlowParameterName(String flowName, String params) {
+		Boolean checkPar = false;
+		try {
+			ArrayList parArr = JsonPath.read(swagger.toString(), "$.paths..x-chatbotFlow[?(@.flowName==\"" + flowName
+					+ "\")].responseToSlots[?(@.parameterName==\"" + params + "\")]");
+			if (!parArr.isEmpty()) {
+				return true;
+			}
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
+
+	public ArrayList getRequireParameter(String path) {
+		try {
+			ArrayList parArr = JsonPath.read(swagger.toString(), "$.paths." + path + "..[?(@.required==true)].name");
+			return parArr;
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 }
