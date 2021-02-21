@@ -1,1568 +1,479 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "title": "The root schema",
-    "description": "The root schema comprises the entire JSON document.",
-    "default": {},
-    "definitions":{
-        "address": {
-          "type": "object",
-          "properties": {
-            "street_address": { "type": "string" },
-            "city":           { "type": "string" },
-            "state":          { "type": "string" }
-          },
-          "required": ["street_address", "city", "state"]
-        }
-    },
-    "examples": [],
-    "required": [
-        "test",
-        "info",
-        "paths"
-    ],
-    "properties": {
-        "test": {
-            "$id": "#/properties/test",
-            "type": "object",
-            "title": "The t schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": {},
-            "examples": [
-                {
-                    "/test/1": {}
-                }
-            ],
-            "required": [],
-            "properties": {
-            },
-            "additionalProperties": {
-                      	"type": "object",
-                        "allOf": [
-                     		{ "$ref": "#/definitions/address" }
-                        ]
-                    }
-        },
-        "info": {
-            "$id": "#/properties/info",
-            "type": "object",
-            "title": "The info schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": {},
-            "examples": [
-                {
-                    "x-chatbotFlow": [
-                        {
-                            "flowName": "suggestVenues",
-                            "flow": [
-                                "/v2/venues/explore",
-                                "/v2/venues/suggestcompletion"
-                            ]
-                        }
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "definitions": {
+    "chatbot": {
+      "type": "object",
+      "properties": {
+        "x-chatbotFlow": {
+          "type": "array",
+          "items": {
+            "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items",
+            "anyOf": [
+              {
+                "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0",
+                "type": "object",
+                "title": "The first anyOf schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": {},
+                "examples": [],
+                "required": [
+                  "flowName"
+                ],
+                "properties": {
+                  "flowName": {
+                    "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/flowName",
+                    "type": "string",
+                    "title": "The flowName schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                      "suggestVenues"
                     ]
-                }
-            ],
-            "required": [
-                "x-chatbotFlow"
-            ],
-            "properties": {
-                "x-chatbotFlow": {
-                    "$id": "#/properties/info/properties/x-chatbotFlow",
+                  },
+                  "responseToSlots": {
+                    "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots",
                     "type": "array",
-                    "title": "The x-chatbotFlow schema",
+                    "title": "The flow schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [],
+                    "additionalItems": true,
+                    "items": {
+                      "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items",
+                      "anyOf": [
+                        {
+                          "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items/anyOf/0",
+                          "type": "object",
+                          "title": "The first anyOf schema",
+                          "description": "An explanation about the purpose of this instance.",
+                          "default": "",
+                          "properties": {
+                            "parameterName": {
+                              "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items/anyOf/0/properties/parameterName",
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items/anyOf/0/properties/jsonPath",
+                              "type": "string"
+                            }
+                          },
+                          "examples": [],
+                          "required": [
+                            "parameterName",
+                            "jsonPath"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "getSlots": {
+                    "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots",
+                    "type": "array",
+                    "title": "The flow schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [],
+                    "additionalItems": true,
+                    "items": {
+                      "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items",
+                      "anyOf": [
+                        {
+                          "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0",
+                          "type": "object",
+                          "title": "The first anyOf schema",
+                          "description": "An explanation about the purpose of this instance.",
+                          "default": "",
+                          "properties": {
+                            "in": {
+                              "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0/properties/in",
+                              "type": "string",
+                              "enum": [
+                                "path",
+                                "body"
+                              ]
+                            },
+                            "parameterName": {
+                              "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0/properties/parameterName",
+                              "type": "string"
+                            },
+                            "type": {
+                              "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0/properties/type",
+                              "type": "string",
+                              "enum": [
+                                "Single",
+                                "Multiple"
+                              ]
+                            }
+                          },
+                          "examples": [],
+                          "required": [
+                            "in",
+                            "parameterName",
+                            "type"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "additionalProperties": true
+              }
+            ]
+          }
+        },
+        "x-bot-utter": {
+          "type": "array",
+          "items": {
+            "$id": "#/definitions/chatbot/properties/x-bot-utter",
+            "anyOf": [
+              {
+                "$id": "#/definitions/chatbot/properties/x-bot-utter/anyOf/0",
+                "type": "object",
+                "title": "The first anyOf schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": {},
+                "examples": [],
+                "required": [
+                  "parameterName",
+                  "utter"
+                ],
+                "properties": {
+                  "parameterName": {
+                    "$id": "#/definitions/chatbot/properties/x-bot-utter/anyOf/0/properties/parameterName",
+                    "type": "string",
+                    "title": "The flowName schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                      "limit"
+                    ]
+                  },
+                  "utter": {
+                    "$id": "#/definitions/chatbot/properties/x-bot-utter/anyOf/0/properties/utter",
+                    "type": "string",
+                    "title": "The flowName schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                      "What do you want to query ?"
+                    ]
+                  }
+                },
+                "additionalProperties": true
+              }
+            ]
+          }
+        },
+        "x-user-entity": {
+          "type": "array",
+          "items": {
+            "$id": "#/definitions/chatbot/properties/x-user-entity/items",
+            "anyOf": [
+              {
+                "$id": "#/definitions/chatbot/properties/x-chatbotFlow/items/anyOf/0",
+                "type": "object",
+                "title": "The first anyOf schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": {},
+                "examples": [],
+                "required": [
+                  "parameterName",
+                  "entityValue"
+                ],
+                "properties": {
+                  "flowName": {
+                    "$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/parameterName",
+                    "type": "string",
+                    "title": "The flowName schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                      "query"
+                    ]
+                  },
+                  "entityValue": {
+                    "$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/entityValue",
+                    "type": "array",
+                    "title": "The flow schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [],
+                    "additionalItems": true,
+                    "items": {
+                      "$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/entityValue/items",
+                      "anyOf": [
+                        {
+                          "$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/entityValue/items/anyOf/0",
+                          "type": [
+                            "string",
+                            "integer"
+                          ],
+                          "title": "The first anyOf schema",
+                          "description": "An explanation about the purpose of this instance.",
+                          "default": "",
+                          "examples": [
+                            [
+                              "coffee",
+                              "park"
+                            ]
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "regex": {
+                    "$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/regex",
+                    "type": "array",
+                    "title": "The flow schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [],
+                    "additionalItems": true,
+                    "items": {
+                      "$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/regex/items",
+                      "anyOf": [
+                        {
+                          "$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/regex/items/anyOf/0",
+                          "type": "string",
+                          "title": "The first anyOf schema",
+                          "description": "An explanation about the purpose of this instance.",
+                          "default": "",
+                          "examples": [
+                            [
+                              "^[0-4][0-9]$"
+                            ]
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "additionalProperties": true
+              }
+            ]
+          }
+        },
+        "x-bot-jsonpPath-result": {
+          "type": "object",
+          "required": [
+            "item",
+            "result"
+          ],
+          "properties": {
+            "item": {
+              "$id": "#/definitions/chatbot/properties/x-bot-jsonpPath-result/item",
+              "type": "integer",
+              "title": "The flowName schema",
+              "description": "An explanation about the purpose of this instance.",
+              "default": "",
+              "examples": [
+                1
+              ]
+            },
+            "result": {
+              "$id": "#/definitions/chatbot/properties/x-bot-jsonpPath-result/result",
+              "type": "array",
+              "title": "The flow schema",
+              "description": "An explanation about the purpose of this instance.",
+              "default": [],
+              "examples": [],
+              "additionalItems": true,
+              "items": {
+                "$id": "#/definitions/chatbot/properties/x-bot-jsonpPath-result/result/items",
+                "anyOf": [
+                  {
+                    "$id": "#/definitions/chatbot/properties/x-bot-jsonpPath-result/result/items/anyOf/0",
+                    "type": "object",
+                    "title": "The first anyOf schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [],
+                    "required": [
+                      "title",
+                      "jsonPath"
+                    ],
+                    "properties": {
+                      "title": {
+                        "$id": "#/definitions/chatbot/properties/x-bot-jsonpPath-result/result/items/anyOf/0/properties/title",
+                        "type": "string",
+                        "title": "The flowName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                          "name"
+                        ]
+                      },
+                      "jsonPath": {
+                        "$id": "#/definitions/chatbot/properties/x-bot-jsonpPath-result/result/items/anyOf/0/properties/jsonPath",
+                        "type": "string",
+                        "title": "The flowName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                          "$..id"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "x-bot-utter",
+        "x-user-entity",
+        "x-bot-jsonpPath-result"
+      ]
+    }
+  },
+  "examples": [],
+  "required": [
+    "info",
+    "paths"
+  ],
+  "properties": {
+    "info": {
+      "$id": "#/properties/info",
+      "type": "object",
+      "title": "The info schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": {},
+      "examples": [
+        {
+          "x-chatbotFlow": [
+            {
+              "flowName": "suggestVenues",
+              "flow": [
+                "/v2/venues/explore",
+                "/v2/venues/suggestcompletion"
+              ]
+            }
+          ]
+        }
+      ],
+      "required": [],
+      "properties": {
+        "x-chatbotFlow": {
+          "$id": "#/properties/info/properties/x-chatbotFlow",
+          "type": "array",
+          "title": "The x-chatbotFlow schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": [],
+          "examples": [
+            [
+              {
+                "flowName": "suggestVenues",
+                "flow": [
+                  "/v2/venues/explore",
+                  "/v2/venues/suggestcompletion"
+                ]
+              }
+            ]
+          ],
+          "additionalItems": true,
+          "items": {
+            "$id": "#/properties/info/properties/x-chatbotFlow/items",
+            "anyOf": [
+              {
+                "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0",
+                "type": "object",
+                "title": "The first anyOf schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": {},
+                "examples": [
+                  {
+                    "flowName": "suggestVenues",
+                    "flow": [
+                      "/v2/venues/explore",
+                      "/v2/venues/suggestcompletion"
+                    ]
+                  }
+                ],
+                "required": [
+                  "flowName",
+                  "flow"
+                ],
+                "properties": {
+                  "flowName": {
+                    "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flowName",
+                    "type": "string",
+                    "title": "The flowName schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                      "suggestVenues"
+                    ]
+                  },
+                  "flow": {
+                    "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flow",
+                    "type": "array",
+                    "title": "The flow schema",
                     "description": "An explanation about the purpose of this instance.",
                     "default": [],
                     "examples": [
-                        [
-                            {
-                                "flowName": "suggestVenues",
-                                "flow": [
-                                    "/v2/venues/explore",
-                                    "/v2/venues/suggestcompletion"
-                                ]
-                            }
-                        ]
+                      [
+                        "/v2/venues/explore",
+                        "/v2/venues/suggestcompletion"
+                      ]
                     ],
                     "additionalItems": true,
                     "items": {
-                        "$id": "#/properties/info/properties/x-chatbotFlow/items",
-                        "anyOf": [
-                            {
-                                "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0",
-                                "type": "object",
-                                "title": "The first anyOf schema",
-                                "description": "An explanation about the purpose of this instance.",
-                                "default": {},
-                                "examples": [
-                                    {
-                                        "flowName": "suggestVenues",
-                                        "flow": [
-                                            "/v2/venues/explore",
-                                            "/v2/venues/suggestcompletion"
-                                        ]
-                                    }
-                                ],
-                                "required": [
-                                    "flowName",
-                                    "flow"
-                                ],
-                                "properties": {
-                                    "flowName": {
-                                        "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flowName",
-                                        "type": "string",
-                                        "title": "The flowName schema",
-                                        "description": "An explanation about the purpose of this instance.",
-                                        "default": "",
-                                        "examples": [
-                                            "suggestVenues"
-                                        ]
-                                    },
-                                    "flow": {
-                                        "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flow",
-                                        "type": "array",
-                                        "title": "The flow schema",
-                                        "description": "An explanation about the purpose of this instance.",
-                                        "default": [],
-                                        "examples": [
-                                            [
-                                                "/v2/venues/explore",
-                                                "/v2/venues/suggestcompletion"
-                                            ]
-                                        ],
-                                        "additionalItems": true,
-                                        "items": {
-                                            "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flow/items",
-                                            "anyOf": [
-                                                {
-                                                    "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flow/items/anyOf/0",
-                                                    "type": "string",
-                                                    "title": "The first anyOf schema",
-                                                    "description": "An explanation about the purpose of this instance.",
-                                                    "default": "",
-                                                    "examples": [
-                                                        "/v2/venues/explore",
-                                                        "/v2/venues/suggestcompletion"
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    }
-                                },
-                                "additionalProperties": true
-                            }
-                        ]
-                    }
-                }
-            },
-            "additionalProperties": true
-        },
-        "paths": {
-            "$id": "#/properties/paths",
-            "type": "object",
-            "title": "The paths schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": {},
-            "examples": [
-                {
-                    "/v2/venues/explore": {
-                        "get": {
-                            "x-chatbotFlow": [
-                                {
-                                    "flowName": "suggestVenues",
-                                    "responseToSlots": [
-                                        {
-                                            "parameterName": "venueId",
-                                            "jsonPath": "$..id"
-                                        }
-                                    ]
-                                }
-                            ],
-                            "x-bot-utter": [
-                                {
-                                    "parameterName": "query",
-                                    "utter": "What do you want to query ?"
-                                },
-                                {
-                                    "parameterName": "limit",
-                                    "utter": "How many limits do you want to set ?"
-                                }
-                            ],
-                            "x-user-entity": [
-                                {
-                                    "parameterName": "query",
-                                    "entityValue": [
-                                        "coffee",
-                                        "park"
-                                    ]
-                                },
-                                {
-                                    "parameterName": "limit",
-                                    "regex": [
-                                        "^[0-4][0-9]$"
-                                    ],
-                                    "entityValue": [
-                                        1,
-                                        34
-                                    ]
-                                }
-                            ],
-                            "x-bot-jsonpPath-result": {
-                                "item": 5,
-                                "result": [
-                                    {
-                                        "title": "name",
-                                        "jsonPath": "$..venue.name"
-                                    },
-                                    {
-                                        "title": "address",
-                                        "jsonPath": "$..venue.location.address"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "/v2/venues/suggestcompletion": {
-                        "get": {
-                            "x-chatbotFlow": [
-                                {
-                                    "flowName": "suggestVenues",
-                                    "getSlots": [
-                                        {
-                                            "in": "path",
-                                            "parameterName": "venueId",
-                                            "type": "Single"
-                                        }
-                                    ]
-                                }
-                            ],
-                            "x-bot-utter": [
-                                {
-                                    "parameterName": "query",
-                                    "utter": "What do you want to query ?"
-                                },
-                                {
-                                    "parameterName": "limit",
-                                    "utter": "How many limits do you want to set ?"
-                                }
-                            ],
-                            "x-user-entity": [
-                                {
-                                    "parameterName": "query",
-                                    "entityValue": [
-                                        "coffee",
-                                        "park"
-                                    ]
-                                },
-                                {
-                                    "parameterName": "limit",
-                                    "regex": [
-                                        "^[0-4][0-9]$"
-                                    ],
-                                    "entityValue": [
-                                        1,
-                                        34
-                                    ]
-                                }
-                            ],
-                            "x-bot-jsonpPath-result": {
-                                "item": 5,
-                                "result": [
-                                    {
-                                        "title": "name",
-                                        "jsonPath": "$..venue.name"
-                                    },
-                                    {
-                                        "title": "address",
-                                        "jsonPath": "$..venue.location.address"
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                }
-            ],
-            "required": [
-                "/v2/venues/explore",
-                "/v2/venues/suggestcompletion"
-            ],
-            "properties": {
-                "/v2/venues/explore": {
-                    "$id": "#/properties/paths/properties//v2/venues/explore",
-                    "type": "object",
-                    "title": "The /v2/venues/explore schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": {},
-                    "examples": [
+                      "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flow/items",
+                      "anyOf": [
                         {
-                            "get": {
-                                "x-chatbotFlow": [
-                                    {
-                                        "flowName": "suggestVenues",
-                                        "responseToSlots": [
-                                            {
-                                                "parameterName": "venueId",
-                                                "jsonPath": "$..id"
-                                            }
-                                        ]
-                                    }
-                                ],
-                                "x-bot-utter": [
-                                    {
-                                        "parameterName": "query",
-                                        "utter": "What do you want to query ?"
-                                    },
-                                    {
-                                        "parameterName": "limit",
-                                        "utter": "How many limits do you want to set ?"
-                                    }
-                                ],
-                                "x-user-entity": [
-                                    {
-                                        "parameterName": "query",
-                                        "entityValue": [
-                                            "coffee",
-                                            "park"
-                                        ]
-                                    },
-                                    {
-                                        "parameterName": "limit",
-                                        "regex": [
-                                            "^[0-4][0-9]$"
-                                        ],
-                                        "entityValue": [
-                                            1,
-                                            34
-                                        ]
-                                    }
-                                ],
-                                "x-bot-jsonpPath-result": {
-                                    "item": 5,
-                                    "result": [
-                                        {
-                                            "title": "name",
-                                            "jsonPath": "$..venue.name"
-                                        },
-                                        {
-                                            "title": "address",
-                                            "jsonPath": "$..venue.location.address"
-                                        }
-                                    ]
-                                }
-                            }
+                          "$id": "#/properties/info/properties/x-chatbotFlow/items/anyOf/0/properties/flow/items/anyOf/0",
+                          "type": "string",
+                          "title": "The first anyOf schema",
+                          "description": "An explanation about the purpose of this instance.",
+                          "default": "",
+                          "examples": [
+                            "/v2/venues/explore",
+                            "/v2/venues/suggestcompletion"
+                          ]
                         }
-                    ],
-                    "required": [
-                        "get"
-                    ],
-                    "properties": {
-                        "get": {
-                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get",
-                            "type": "object",
-                            "title": "The get schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": {},
-                            "examples": [
-                                {
-                                    "x-chatbotFlow": [
-                                        {
-                                            "flowName": "suggestVenues",
-                                            "responseToSlots": [
-                                                {
-                                                    "parameterName": "venueId",
-                                                    "jsonPath": "$..id"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "x-bot-utter": [
-                                        {
-                                            "parameterName": "query",
-                                            "utter": "What do you want to query ?"
-                                        },
-                                        {
-                                            "parameterName": "limit",
-                                            "utter": "How many limits do you want to set ?"
-                                        }
-                                    ],
-                                    "x-user-entity": [
-                                        {
-                                            "parameterName": "query",
-                                            "entityValue": [
-                                                "coffee",
-                                                "park"
-                                            ]
-                                        },
-                                        {
-                                            "parameterName": "limit",
-                                            "regex": [
-                                                "^[0-4][0-9]$"
-                                            ],
-                                            "entityValue": [
-                                                1,
-                                                34
-                                            ]
-                                        }
-                                    ],
-                                    "x-bot-jsonpPath-result": {
-                                        "item": 5,
-                                        "result": [
-                                            {
-                                                "title": "name",
-                                                "jsonPath": "$..venue.name"
-                                            },
-                                            {
-                                                "title": "address",
-                                                "jsonPath": "$..venue.location.address"
-                                            }
-                                        ]
-                                    }
-                                }
-                            ],
-                            "required": [
-                                "x-chatbotFlow",
-                                "x-bot-utter",
-                                "x-user-entity",
-                                "x-bot-jsonpPath-result"
-                            ],
-                            "properties": {
-                                "x-chatbotFlow": {
-                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow",
-                                    "type": "array",
-                                    "title": "The x-chatbotFlow schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": [],
-                                    "examples": [
-                                        [
-                                            {
-                                                "flowName": "suggestVenues",
-                                                "responseToSlots": [
-                                                    {
-                                                        "parameterName": "venueId",
-                                                        "jsonPath": "$..id"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    ],
-                                    "additionalItems": true,
-                                    "items": {
-                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items",
-                                        "anyOf": [
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items/anyOf/0",
-                                                "type": "object",
-                                                "title": "The first anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "flowName": "suggestVenues",
-                                                        "responseToSlots": [
-                                                            {
-                                                                "parameterName": "venueId",
-                                                                "jsonPath": "$..id"
-                                                            }
-                                                        ]
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "flowName",
-                                                    "responseToSlots"
-                                                ],
-                                                "properties": {
-                                                    "flowName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/flowName",
-                                                        "type": "string",
-                                                        "title": "The flowName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "suggestVenues"
-                                                        ]
-                                                    },
-                                                    "responseToSlots": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots",
-                                                        "type": "array",
-                                                        "title": "The responseToSlots schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                {
-                                                                    "parameterName": "venueId",
-                                                                    "jsonPath": "$..id"
-                                                                }
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items/anyOf/0",
-                                                                    "type": "object",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": {},
-                                                                    "examples": [
-                                                                        {
-                                                                            "parameterName": "venueId",
-                                                                            "jsonPath": "$..id"
-                                                                        }
-                                                                    ],
-                                                                    "required": [
-                                                                        "parameterName",
-                                                                        "jsonPath"
-                                                                    ],
-                                                                    "properties": {
-                                                                        "parameterName": {
-                                                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items/anyOf/0/properties/parameterName",
-                                                                            "type": "string",
-                                                                            "title": "The parameterName schema",
-                                                                            "description": "An explanation about the purpose of this instance.",
-                                                                            "default": "",
-                                                                            "examples": [
-                                                                                "venueId"
-                                                                            ]
-                                                                        },
-                                                                        "jsonPath": {
-                                                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/responseToSlots/items/anyOf/0/properties/jsonPath",
-                                                                            "type": "string",
-                                                                            "title": "The jsonPath schema",
-                                                                            "description": "An explanation about the purpose of this instance.",
-                                                                            "default": "",
-                                                                            "examples": [
-                                                                                "$..id"
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": true
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            }
-                                        ]
-                                    }
-                                },
-                                "x-bot-utter": {
-                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-utter",
-                                    "type": "array",
-                                    "title": "The x-bot-utter schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": [],
-                                    "examples": [
-                                        [
-                                            {
-                                                "parameterName": "query",
-                                                "utter": "What do you want to query ?"
-                                            },
-                                            {
-                                                "parameterName": "limit",
-                                                "utter": "How many limits do you want to set ?"
-                                            }
-                                        ]
-                                    ],
-                                    "additionalItems": true,
-                                    "items": {
-                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-utter/items",
-                                        "anyOf": [
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-utter/items/anyOf/0",
-                                                "type": "object",
-                                                "title": "The first anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "parameterName": "query",
-                                                        "utter": "What do you want to query ?"
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "parameterName",
-                                                    "utter"
-                                                ],
-                                                "properties": {
-                                                    "parameterName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-utter/items/anyOf/0/properties/parameterName",
-                                                        "type": "string",
-                                                        "title": "The parameterName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "query"
-                                                        ]
-                                                    },
-                                                    "utter": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-utter/items/anyOf/0/properties/utter",
-                                                        "type": "string",
-                                                        "title": "The utter schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "What do you want to query ?"
-                                                        ]
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            }
-                                        ]
-                                    }
-                                },
-                                "x-user-entity": {
-                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity",
-                                    "type": "array",
-                                    "title": "The x-user-entity schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": [],
-                                    "examples": [
-                                        [
-                                            {
-                                                "parameterName": "query",
-                                                "entityValue": [
-                                                    "coffee",
-                                                    "park"
-                                                ]
-                                            },
-                                            {
-                                                "parameterName": "limit",
-                                                "regex": [
-                                                    "^[0-4][0-9]$"
-                                                ],
-                                                "entityValue": [
-                                                    1,
-                                                    34
-                                                ]
-                                            }
-                                        ]
-                                    ],
-                                    "additionalItems": true,
-                                    "items": {
-                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items",
-                                        "anyOf": [
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/0",
-                                                "type": "object",
-                                                "title": "The first anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "parameterName": "query",
-                                                        "entityValue": [
-                                                            "coffee",
-                                                            "park"
-                                                        ]
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "parameterName",
-                                                    "entityValue"
-                                                ],
-                                                "properties": {
-                                                    "parameterName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/0/properties/parameterName",
-                                                        "type": "string",
-                                                        "title": "The parameterName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "query"
-                                                        ]
-                                                    },
-                                                    "entityValue": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/0/properties/entityValue",
-                                                        "type": "array",
-                                                        "title": "The entityValue schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                "coffee",
-                                                                "park"
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/0/properties/entityValue/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/0/properties/entityValue/items/anyOf/0",
-                                                                    "type": "string",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": "",
-                                                                    "examples": [
-                                                                        "coffee",
-                                                                        "park"
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            },
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1",
-                                                "type": "object",
-                                                "title": "The second anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "parameterName": "limit",
-                                                        "regex": [
-                                                            "^[0-4][0-9]$"
-                                                        ],
-                                                        "entityValue": [
-                                                            1,
-                                                            34
-                                                        ]
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "parameterName",
-                                                    "regex",
-                                                    "entityValue"
-                                                ],
-                                                "properties": {
-                                                    "parameterName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1/properties/parameterName",
-                                                        "type": "string",
-                                                        "title": "The parameterName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "limit"
-                                                        ]
-                                                    },
-                                                    "regex": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1/properties/regex",
-                                                        "type": "array",
-                                                        "title": "The regex schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                "^[0-4][0-9]$"
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1/properties/regex/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1/properties/regex/items/anyOf/0",
-                                                                    "type": "string",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": "",
-                                                                    "examples": [
-                                                                        "^[0-4][0-9]$"
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    },
-                                                    "entityValue": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1/properties/entityValue",
-                                                        "type": "array",
-                                                        "title": "The entityValue schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                1,
-                                                                34
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1/properties/entityValue/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-user-entity/items/anyOf/1/properties/entityValue/items/anyOf/0",
-                                                                    "type": "integer",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": 0,
-                                                                    "examples": [
-                                                                        1,
-                                                                        34
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            }
-                                        ]
-                                    }
-                                },
-                                "x-bot-jsonpPath-result": {
-                                    "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-jsonpPath-result",
-                                    "type": "object",
-                                    "title": "The x-bot-jsonpPath-result schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": {},
-                                    "examples": [
-                                        {
-                                            "item": 5,
-                                            "result": [
-                                                {
-                                                    "title": "name",
-                                                    "jsonPath": "$..venue.name"
-                                                },
-                                                {
-                                                    "title": "address",
-                                                    "jsonPath": "$..venue.location.address"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "required": [
-                                        "item",
-                                        "result"
-                                    ],
-                                    "properties": {
-                                        "item": {
-                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-jsonpPath-result/properties/item",
-                                            "type": "integer",
-                                            "title": "The item schema",
-                                            "description": "An explanation about the purpose of this instance.",
-                                            "default": 0,
-                                            "examples": [
-                                                5
-                                            ]
-                                        },
-                                        "result": {
-                                            "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-jsonpPath-result/properties/result",
-                                            "type": "array",
-                                            "title": "The result schema",
-                                            "description": "An explanation about the purpose of this instance.",
-                                            "default": [],
-                                            "examples": [
-                                                [
-                                                    {
-                                                        "title": "name",
-                                                        "jsonPath": "$..venue.name"
-                                                    },
-                                                    {
-                                                        "title": "address",
-                                                        "jsonPath": "$..venue.location.address"
-                                                    }
-                                                ]
-                                            ],
-                                            "additionalItems": true,
-                                            "items": {
-                                                "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-jsonpPath-result/properties/result/items",
-                                                "anyOf": [
-                                                    {
-                                                        "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-jsonpPath-result/properties/result/items/anyOf/0",
-                                                        "type": "object",
-                                                        "title": "The first anyOf schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": {},
-                                                        "examples": [
-                                                            {
-                                                                "title": "name",
-                                                                "jsonPath": "$..venue.name"
-                                                            }
-                                                        ],
-                                                        "required": [
-                                                            "title",
-                                                            "jsonPath"
-                                                        ],
-                                                        "properties": {
-                                                            "title": {
-                                                                "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-jsonpPath-result/properties/result/items/anyOf/0/properties/title",
-                                                                "type": "string",
-                                                                "title": "The title schema",
-                                                                "description": "An explanation about the purpose of this instance.",
-                                                                "default": "",
-                                                                "examples": [
-                                                                    "name"
-                                                                ]
-                                                            },
-                                                            "jsonPath": {
-                                                                "$id": "#/properties/paths/properties//v2/venues/explore/properties/get/properties/x-bot-jsonpPath-result/properties/result/items/anyOf/0/properties/jsonPath",
-                                                                "type": "string",
-                                                                "title": "The jsonPath schema",
-                                                                "description": "An explanation about the purpose of this instance.",
-                                                                "default": "",
-                                                                "examples": [
-                                                                    "$..venue.name"
-                                                                ]
-                                                            }
-                                                        },
-                                                        "additionalProperties": true
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": true
-                                }
-                            },
-                            "additionalProperties": true
-                        }
-                    },
-                    "additionalProperties": true
+                      ]
+                    }
+                  }
                 },
-                "/v2/venues/suggestcompletion": {
-                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion",
-                    "type": "object",
-                    "title": "The /v2/venues/suggestcompletion schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": {},
-                    "examples": [
-                        {
-                            "get": {
-                                "x-chatbotFlow": [
-                                    {
-                                        "flowName": "suggestVenues",
-                                        "getSlots": [
-                                            {
-                                                "in": "path",
-                                                "parameterName": "venueId",
-                                                "type": "Single"
-                                            }
-                                        ]
-                                    }
-                                ],
-                                "x-bot-utter": [
-                                    {
-                                        "parameterName": "query",
-                                        "utter": "What do you want to query ?"
-                                    },
-                                    {
-                                        "parameterName": "limit",
-                                        "utter": "How many limits do you want to set ?"
-                                    }
-                                ],
-                                "x-user-entity": [
-                                    {
-                                        "parameterName": "query",
-                                        "entityValue": [
-                                            "coffee",
-                                            "park"
-                                        ]
-                                    },
-                                    {
-                                        "parameterName": "limit",
-                                        "regex": [
-                                            "^[0-4][0-9]$"
-                                        ],
-                                        "entityValue": [
-                                            1,
-                                            34
-                                        ]
-                                    }
-                                ],
-                                "x-bot-jsonpPath-result": {
-                                    "item": 5,
-                                    "result": [
-                                        {
-                                            "title": "name",
-                                            "jsonPath": "$..venue.name"
-                                        },
-                                        {
-                                            "title": "address",
-                                            "jsonPath": "$..venue.location.address"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ],
-                    "required": [
-                        "get"
-                    ],
-                    "properties": {
-                        "get": {
-                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get",
-                            "type": "object",
-                            "title": "The get schema",
-                            "description": "An explanation about the purpose of this instance.",
-                            "default": {},
-                            "examples": [
-                                {
-                                    "x-chatbotFlow": [
-                                        {
-                                            "flowName": "suggestVenues",
-                                            "getSlots": [
-                                                {
-                                                    "in": "path",
-                                                    "parameterName": "venueId",
-                                                    "type": "Single"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "x-bot-utter": [
-                                        {
-                                            "parameterName": "query",
-                                            "utter": "What do you want to query ?"
-                                        },
-                                        {
-                                            "parameterName": "limit",
-                                            "utter": "How many limits do you want to set ?"
-                                        }
-                                    ],
-                                    "x-user-entity": [
-                                        {
-                                            "parameterName": "query",
-                                            "entityValue": [
-                                                "coffee",
-                                                "park"
-                                            ]
-                                        },
-                                        {
-                                            "parameterName": "limit",
-                                            "regex": [
-                                                "^[0-4][0-9]$"
-                                            ],
-                                            "entityValue": [
-                                                1,
-                                                34
-                                            ]
-                                        }
-                                    ],
-                                    "x-bot-jsonpPath-result": {
-                                        "item": 5,
-                                        "result": [
-                                            {
-                                                "title": "name",
-                                                "jsonPath": "$..venue.name"
-                                            },
-                                            {
-                                                "title": "address",
-                                                "jsonPath": "$..venue.location.address"
-                                            }
-                                        ]
-                                    }
-                                }
-                            ],
-                            "required": [
-                                "x-chatbotFlow",
-                                "x-bot-utter",
-                                "x-user-entity",
-                                "x-bot-jsonpPath-result"
-                            ],
-                            "properties": {
-                                "x-chatbotFlow": {
-                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow",
-                                    "type": "array",
-                                    "title": "The x-chatbotFlow schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": [],
-                                    "examples": [
-                                        [
-                                            {
-                                                "flowName": "suggestVenues",
-                                                "getSlots": [
-                                                    {
-                                                        "in": "path",
-                                                        "parameterName": "venueId",
-                                                        "type": "Single"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    ],
-                                    "additionalItems": true,
-                                    "items": {
-                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items",
-                                        "anyOf": [
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0",
-                                                "type": "object",
-                                                "title": "The first anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "flowName": "suggestVenues",
-                                                        "getSlots": [
-                                                            {
-                                                                "in": "path",
-                                                                "parameterName": "venueId",
-                                                                "type": "Single"
-                                                            }
-                                                        ]
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "flowName",
-                                                    "getSlots"
-                                                ],
-                                                "properties": {
-                                                    "flowName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/flowName",
-                                                        "type": "string",
-                                                        "title": "The flowName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "suggestVenues"
-                                                        ]
-                                                    },
-                                                    "getSlots": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots",
-                                                        "type": "array",
-                                                        "title": "The getSlots schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                {
-                                                                    "in": "path",
-                                                                    "parameterName": "venueId",
-                                                                    "type": "Single"
-                                                                }
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0",
-                                                                    "type": "object",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": {},
-                                                                    "examples": [
-                                                                        {
-                                                                            "in": "path",
-                                                                            "parameterName": "venueId",
-                                                                            "type": "Single"
-                                                                        }
-                                                                    ],
-                                                                    "required": [
-                                                                        "in",
-                                                                        "parameterName",
-                                                                        "type"
-                                                                    ],
-                                                                    "properties": {
-                                                                        "in": {
-                                                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0/properties/in",
-                                                                            "type": "string",
-                                                                            "title": "The in schema",
-                                                                            "description": "An explanation about the purpose of this instance.",
-                                                                            "default": "",
-                                                                            "examples": [
-                                                                                "path"
-                                                                            ]
-                                                                        },
-                                                                        "parameterName": {
-                                                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0/properties/parameterName",
-                                                                            "type": "string",
-                                                                            "title": "The parameterName schema",
-                                                                            "description": "An explanation about the purpose of this instance.",
-                                                                            "default": "",
-                                                                            "examples": [
-                                                                                "venueId"
-                                                                            ]
-                                                                        },
-                                                                        "type": {
-                                                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-chatbotFlow/items/anyOf/0/properties/getSlots/items/anyOf/0/properties/type",
-                                                                            "type": "string",
-                                                                            "title": "The type schema",
-                                                                            "description": "An explanation about the purpose of this instance.",
-                                                                            "default": "",
-                                                                            "examples": [
-                                                                                "Single"
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    "additionalProperties": true
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            }
-                                        ]
-                                    }
-                                },
-                                "x-bot-utter": {
-                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-utter",
-                                    "type": "array",
-                                    "title": "The x-bot-utter schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": [],
-                                    "examples": [
-                                        [
-                                            {
-                                                "parameterName": "query",
-                                                "utter": "What do you want to query ?"
-                                            },
-                                            {
-                                                "parameterName": "limit",
-                                                "utter": "How many limits do you want to set ?"
-                                            }
-                                        ]
-                                    ],
-                                    "additionalItems": true,
-                                    "items": {
-                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-utter/items",
-                                        "anyOf": [
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-utter/items/anyOf/0",
-                                                "type": "object",
-                                                "title": "The first anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "parameterName": "query",
-                                                        "utter": "What do you want to query ?"
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "parameterName",
-                                                    "utter"
-                                                ],
-                                                "properties": {
-                                                    "parameterName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-utter/items/anyOf/0/properties/parameterName",
-                                                        "type": "string",
-                                                        "title": "The parameterName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "query"
-                                                        ]
-                                                    },
-                                                    "utter": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-utter/items/anyOf/0/properties/utter",
-                                                        "type": "string",
-                                                        "title": "The utter schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "What do you want to query ?"
-                                                        ]
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            }
-                                        ]
-                                    }
-                                },
-                                "x-user-entity": {
-                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity",
-                                    "type": "array",
-                                    "title": "The x-user-entity schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": [],
-                                    "examples": [
-                                        [
-                                            {
-                                                "parameterName": "query",
-                                                "entityValue": [
-                                                    "coffee",
-                                                    "park"
-                                                ]
-                                            },
-                                            {
-                                                "parameterName": "limit",
-                                                "regex": [
-                                                    "^[0-4][0-9]$"
-                                                ],
-                                                "entityValue": [
-                                                    1,
-                                                    34
-                                                ]
-                                            }
-                                        ]
-                                    ],
-                                    "additionalItems": true,
-                                    "items": {
-                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items",
-                                        "anyOf": [
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/0",
-                                                "type": "object",
-                                                "title": "The first anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "parameterName": "query",
-                                                        "entityValue": [
-                                                            "coffee",
-                                                            "park"
-                                                        ]
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "parameterName",
-                                                    "entityValue"
-                                                ],
-                                                "properties": {
-                                                    "parameterName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/0/properties/parameterName",
-                                                        "type": "string",
-                                                        "title": "The parameterName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "query"
-                                                        ]
-                                                    },
-                                                    "entityValue": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/0/properties/entityValue",
-                                                        "type": "array",
-                                                        "title": "The entityValue schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                "coffee",
-                                                                "park"
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/0/properties/entityValue/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/0/properties/entityValue/items/anyOf/0",
-                                                                    "type": "string",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": "",
-                                                                    "examples": [
-                                                                        "coffee",
-                                                                        "park"
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            },
-                                            {
-                                                "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1",
-                                                "type": "object",
-                                                "title": "The second anyOf schema",
-                                                "description": "An explanation about the purpose of this instance.",
-                                                "default": {},
-                                                "examples": [
-                                                    {
-                                                        "parameterName": "limit",
-                                                        "regex": [
-                                                            "^[0-4][0-9]$"
-                                                        ],
-                                                        "entityValue": [
-                                                            1,
-                                                            34
-                                                        ]
-                                                    }
-                                                ],
-                                                "required": [
-                                                    "parameterName",
-                                                    "regex",
-                                                    "entityValue"
-                                                ],
-                                                "properties": {
-                                                    "parameterName": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1/properties/parameterName",
-                                                        "type": "string",
-                                                        "title": "The parameterName schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": "",
-                                                        "examples": [
-                                                            "limit"
-                                                        ]
-                                                    },
-                                                    "regex": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1/properties/regex",
-                                                        "type": "array",
-                                                        "title": "The regex schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                "^[0-4][0-9]$"
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1/properties/regex/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1/properties/regex/items/anyOf/0",
-                                                                    "type": "string",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": "",
-                                                                    "examples": [
-                                                                        "^[0-4][0-9]$"
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    },
-                                                    "entityValue": {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1/properties/entityValue",
-                                                        "type": "array",
-                                                        "title": "The entityValue schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": [],
-                                                        "examples": [
-                                                            [
-                                                                1,
-                                                                34
-                                                            ]
-                                                        ],
-                                                        "additionalItems": true,
-                                                        "items": {
-                                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1/properties/entityValue/items",
-                                                            "anyOf": [
-                                                                {
-                                                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-user-entity/items/anyOf/1/properties/entityValue/items/anyOf/0",
-                                                                    "type": "integer",
-                                                                    "title": "The first anyOf schema",
-                                                                    "description": "An explanation about the purpose of this instance.",
-                                                                    "default": 0,
-                                                                    "examples": [
-                                                                        1,
-                                                                        34
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                },
-                                                "additionalProperties": true
-                                            }
-                                        ]
-                                    }
-                                },
-                                "x-bot-jsonpPath-result": {
-                                    "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-jsonpPath-result",
-                                    "type": "object",
-                                    "title": "The x-bot-jsonpPath-result schema",
-                                    "description": "An explanation about the purpose of this instance.",
-                                    "default": {},
-                                    "examples": [
-                                        {
-                                            "item": 5,
-                                            "result": [
-                                                {
-                                                    "title": "name",
-                                                    "jsonPath": "$..venue.name"
-                                                },
-                                                {
-                                                    "title": "address",
-                                                    "jsonPath": "$..venue.location.address"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "required": [
-                                        "item",
-                                        "result"
-                                    ],
-                                    "properties": {
-                                        "item": {
-                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-jsonpPath-result/properties/item",
-                                            "type": "integer",
-                                            "title": "The item schema",
-                                            "description": "An explanation about the purpose of this instance.",
-                                            "default": 0,
-                                            "examples": [
-                                                5
-                                            ]
-                                        },
-                                        "result": {
-                                            "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-jsonpPath-result/properties/result",
-                                            "type": "array",
-                                            "title": "The result schema",
-                                            "description": "An explanation about the purpose of this instance.",
-                                            "default": [],
-                                            "examples": [
-                                                [
-                                                    {
-                                                        "title": "name",
-                                                        "jsonPath": "$..venue.name"
-                                                    },
-                                                    {
-                                                        "title": "address",
-                                                        "jsonPath": "$..venue.location.address"
-                                                    }
-                                                ]
-                                            ],
-                                            "additionalItems": true,
-                                            "items": {
-                                                "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-jsonpPath-result/properties/result/items",
-                                                "anyOf": [
-                                                    {
-                                                        "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-jsonpPath-result/properties/result/items/anyOf/0",
-                                                        "type": "object",
-                                                        "title": "The first anyOf schema",
-                                                        "description": "An explanation about the purpose of this instance.",
-                                                        "default": {},
-                                                        "examples": [
-                                                            {
-                                                                "title": "name",
-                                                                "jsonPath": "$..venue.name"
-                                                            }
-                                                        ],
-                                                        "required": [
-                                                            "title",
-                                                            "jsonPath"
-                                                        ],
-                                                        "properties": {
-                                                            "title": {
-                                                                "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-jsonpPath-result/properties/result/items/anyOf/0/properties/title",
-                                                                "type": "string",
-                                                                "title": "The title schema",
-                                                                "description": "An explanation about the purpose of this instance.",
-                                                                "default": "",
-                                                                "examples": [
-                                                                    "name"
-                                                                ]
-                                                            },
-                                                            "jsonPath": {
-                                                                "$id": "#/properties/paths/properties//v2/venues/suggestcompletion/properties/get/properties/x-bot-jsonpPath-result/properties/result/items/anyOf/0/properties/jsonPath",
-                                                                "type": "string",
-                                                                "title": "The jsonPath schema",
-                                                                "description": "An explanation about the purpose of this instance.",
-                                                                "default": "",
-                                                                "examples": [
-                                                                    "$..venue.name"
-                                                                ]
-                                                            }
-                                                        },
-                                                        "additionalProperties": true
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": true
-                                }
-                            },
-                            "additionalProperties": true
-                        }
-                    },
-                    "additionalProperties": true
-                }
-            },
-            "additionalProperties": true
+                "additionalProperties": true
+              }
+            ]
+          }
         }
+      },
+      "additionalProperties": true
     },
-    "additionalProperties": true
+    "paths": {
+      "$id": "#/properties/paths",
+      "type": "object",
+      "title": "The paths schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": {},
+      "examples": [],
+      "required": [],
+      "properties": {},
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "get": {
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/definitions/chatbot"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
 }
