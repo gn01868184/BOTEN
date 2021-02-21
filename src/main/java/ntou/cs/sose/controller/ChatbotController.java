@@ -3,7 +3,12 @@ package ntou.cs.sose.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+
+import ntou.cs.sose.model.SwaggerChecker;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,11 +28,11 @@ public class ChatbotController {
 	        return "index";
 	    }
 	
-	@GetMapping(value = "/x", produces = "application/json")
+	@GetMapping(value = "/swaggerCheck", produces = "application/json")
 	@ResponseBody
-    public String hello() {
+    public String swaggerCheck(@RequestParam String swaggerURL) {
 		try {
-			URL url = new URL("https://api.apis.guru/v2/specs/1forge.com/0.0.1/swagger.json");
+			URL url = new URL(swaggerURL);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -36,9 +41,13 @@ public class ChatbotController {
 			if (200 <= con.getResponseCode() && con.getResponseCode() <= 399) {
 			    br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			    String responseBody = br.lines().collect(Collectors.joining());
-			    System.out.println(responseBody);
 			    swagger = responseBody;
-			    return swagger;
+			    JSONObject jsonObject = new JSONObject(responseBody);
+			    System.out.println(jsonObject);
+				SwaggerChecker sc = new SwaggerChecker();
+				Gson gson = new Gson();
+				String json = gson.toJson(sc.sc(jsonObject)); 
+			    return json.toString();
 			} else {
 			    System.out.println("Error: " + con.getResponseCode());
 			}
