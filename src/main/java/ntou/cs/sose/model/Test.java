@@ -10,5 +10,9 @@ public class Test {
 		JSONObject swagger = new JSONObject(new JSONTokener(tes.getResourceAsStream("/foursquareSwagger.json")));
 		SwaggerChecker sc = new SwaggerChecker();
 		sc.sc(swagger);
+		
+		InputOutputHandler ioc = new InputOutputHandler();
+		ioc.ioc(swagger);
+		System.out.println(ioc.ioc(swagger));
 	}
 }
