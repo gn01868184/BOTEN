@@ -1,315 +1,319 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "defaultTitle",
-    "description": "defaultDescription",
-    "version": "0.1",
-    "x-chatbotFlow": [
-      {
-        "flowName": "flow1",
-        "flow": [
-          "/v2/venues/explore",
-          "/v2/venues/suggestcompletion"
-        ]
-      },      
-      {
-        "flowName": "suggeastVenues",
-        "flow": [
-          "/v2/venues/explore",
-          "/v2/venues/test2"
-        ]
-      }
-   ]
-  },
-  "servers": [
-    {
-      "url": "https://api.foursquare.com"
-    }
-  ],
-  "paths": {
-    "/v2/venues/suggestcompletion": {
-      "get": {
-        "description": "Auto generated using Swagger Inspector",
-        "parameters": [
-          {
-            "name": "ll",
-            "in": "query",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "25.129253,121.736299"
-          },
-          {
-            "name": "v",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "20180323"
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "Coffee"
-          },
-          {
-            "name": "client_secret",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "UGUD420J2ASQC3NZXQIFSPHFFK24GQDOWBD0LNT3OVMV4VZ2"
-          },
-          {
-            "name": "client_id",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "RQQRFNZSMYRZDWCAQFC5RNAM0SWIAONSWWRYCR2PJXW5TQXR"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Auto generated using Swagger Inspector"
-          }
-        },
-        "servers": [
-          {
-            "url": "https://api.foursquare.com"
-          }
-        ],
-        "x-chatbotFlow": [
-          {
-            "flowName": "suggeastVenues",
-            "responseToSlots": [
-              {
-                "parameterName": "venueId",
-                "jsonPath": "$..id"
-              }
-            ]
-          },
-                    {
-            "flowName": "flow2",
-            "responseToSlots": [
-              {
-                "parameterName": "v",
-                "jsonPath": "1"
-              }
-            ]
-          }
-        ],
-        "x-bot-utter": [
-          {
-            "parameterName": "query2",
-            "utter": "What do you want to query ?"
-          },
-          {
-            "parameterName": "limit",
-            "utter": "How many limits do you want to set ?"
-          }
-        ],
-        "x-user-entity": [
-          {
-            "parameterName": "query",
-            "entityValue": [
-              "coffee",
-              "park"
-            ]
-          },
-          {
-            "parameterName": "limit",
-            "regex": [
-              "^[0-4][0-9]$"
-            ],
-            "entityValue": [
-              1,
-              34
-            ]
-          }
-        ],
-        "x-bot-jsonpPath-result": {
-          "item": 5,
-          "result": [
-            {
-              "title": "name",
-              "jsonPath": "$..venue.name"
-            },
-            {
-              "title": "address",
-              "jsonPath": "$..venue.location.address"
-            }
-          ]
-        }
-      },
-      "servers": [
-        {
-          "url": "https://api.foursquare.com"
-        }
-      ]
-    },
-    "/v2/venues/explore": {
-      "get": {
-        "description": "Auto generated using Swagger Inspector",
-        "parameters": [
-          {
-            "name": "ll",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "25.129253,121.736299"
-          },
-          {
-            "name": "v",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "20180323"
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "Coffee"
-          },
-          {
-            "name": "client_secret",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "UGUD420J2ASQC3NZXQIFSPHFFK24GQDOWBD0LNT3OVMV4VZ2"
-          },
-          {
-            "name": "client_id",
-            "in": "query",
-            "required": false,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "RQQRFNZSMYRZDWCAQFC5RNAM0SWIAONSWWRYCR2PJXW5TQXR"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Auto generated using Swagger Inspector"
-          }
-        },
-        "servers": [
-          {
-            "url": "https://api.foursquare.com"
-          }
-        ],
-        "x-chatbotFlow": [
-          {
-            "flowName": "suggeastVenues",
-            "getSlots": [
-              {
-                "in": "path",
-                "parameterName": "venueId",
-                "type": "Single"
-              },              {
-                "in": "path",
-                "parameterName": "venueId2",
-                "type": "Single"
-              }
-            ]
-          },          {
-            "flowName": "gu",
-            "getSlots": [
-              {
-                "in": "path",
-                "parameterName": "test",
-                "type": "Single"
-              }
-            ]
-          }
-        ],
-        "x-bot-utter": [
-          {
-            "parameterName": "query",
-            "utter": "What do you want to query ?"
-          },
-          {
-            "parameterName": "limit",
-            "utter": "How many limits do you want to set ?"
-          }
-        ],
-        "x-user-entity": [
-          {
-            "parameterName": "query",
-            "entityValue": [
-              "coffee",
-              "park"
-            ]
-          },
-          {
-            "parameterName": "limit",
-            "regex": [
-              "^[0-4][0-9]$"
-            ],
-            "entityValue": [
-              1,
-              34
-            ]
-          }
-        ],
-        "x-bot-jsonpPath-result": {
-          "item": 5,
-          "result": [
-            {
-              "title": "name",
-              "jsonPath": "$..venue.name"
-            },
-            {
-              "title": "address",
-              "jsonPath": "$..venue.location.address"
-            }
-          ]
-        }
-      },
-      "servers": [
-        {
-          "url": "https://api.foursquare.com"
-        }
-      ]
-    }
-  },
-  "components": {}
+	"openapi": "3.0.1",
+	"info": {
+		"title": "defaultTitle",
+		"description": "defaultDescription",
+		"version": "0.1",
+		"x-chatbotFlow": [
+			{
+				"flowName": "flow1",
+				"flow": [
+					"/v2/venues/explore",
+					"/v2/venues/suggestcompletion"
+				]
+			},
+			{
+				"flowName": "suggeastVenues",
+				"flow": [
+					"/v2/venues/explore",
+					"/v2/venues/test2"
+				]
+			}
+		]
+	},
+	"servers": [
+		{
+			"url": "https://api.foursquare.com"
+		}
+	],
+	"paths": {
+		"/v2/venues/suggestcompletion": {
+			"get": {
+				"description": "Auto generated using Swagger Inspector",
+				"parameters": [
+					{
+						"name": "ll",
+						"in": "query",
+						"required": true,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "25.129253,121.736299"
+					},
+					{
+						"name": "v",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "20180323"
+					},
+					{
+						"name": "query",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "Coffee"
+					},
+					{
+						"name": "client_secret",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "UGUD420J2ASQC3NZXQIFSPHFFK24GQDOWBD0LNT3OVMV4VZ2"
+					},
+					{
+						"name": "client_id",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "RQQRFNZSMYRZDWCAQFC5RNAM0SWIAONSWWRYCR2PJXW5TQXR"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Auto generated using Swagger Inspector"
+					}
+				},
+				"servers": [
+					{
+						"url": "https://api.foursquare.com"
+					}
+				],
+				"x-chatbotFlow": [
+					{
+						"flowName": "suggeastVenues",
+						"responseToSlots": [
+							{
+								"parameterName": "venueId",
+								"jsonPath": "$..id"
+							}
+						]
+					},
+					{
+						"flowName": "flow2",
+						"responseToSlots": [
+							{
+								"parameterName": "v",
+								"jsonPath": "1"
+							}
+						]
+					}
+				],
+				"x-bot-utter": [
+					{
+						"parameterName": "query2",
+						"utter": "What do you want to query ?"
+					},
+					{
+						"parameterName": "limit",
+						"utter": "How many limits do you want to set ?"
+					}
+				],
+				"x-user-entity": [
+					{
+						"parameterName": "query",
+						"entityValue": [
+							"coffee",
+							"park"
+						]
+					},
+					{
+						"parameterName": "limit",
+						"regex": [
+							"^[0-4][0-3]$","^[0-6]$"
+						],
+						"entityValue": [
+							1,
+							34
+						]
+					}
+				],
+				"x-bot-jsonpPath-result": {
+					"item": 5,
+					"result": [
+						{
+							"title": "name",
+							"jsonPath": "$..venue.name"
+						},
+						{
+							"title": "address",
+							"jsonPath": "$..venue.location.address"
+						}
+					]
+				}
+			},
+			"servers": [
+				{
+					"url": "https://api.foursquare.com"
+				}
+			]
+		},
+		"/v2/venues/explore": {
+			"get": {
+				"description": "Auto generated using Swagger Inspector",
+				"parameters": [
+					{
+						"name": "ll",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "25.129253,121.736299"
+					},
+					{
+						"name": "v",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "20180323"
+					},
+					{
+						"name": "query",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "Coffee"
+					},
+					{
+						"name": "client_secret",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "UGUD420J2ASQC3NZXQIFSPHFFK24GQDOWBD0LNT3OVMV4VZ2"
+					},
+					{
+						"name": "client_id",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "RQQRFNZSMYRZDWCAQFC5RNAM0SWIAONSWWRYCR2PJXW5TQXR"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Auto generated using Swagger Inspector"
+					}
+				},
+				"servers": [
+					{
+						"url": "https://api.foursquare.com"
+					}
+				],
+				"x-chatbotFlow": [
+					{
+						"flowName": "suggeastVenues",
+						"getSlots": [
+							{
+								"in": "path",
+								"parameterName": "venueId",
+								"type": "Single"
+							},
+							{
+								"in": "path",
+								"parameterName": "venueId2",
+								"type": "Single"
+							}
+						]
+					},
+					{
+						"flowName": "gu",
+						"getSlots": [
+							{
+								"in": "path",
+								"parameterName": "test",
+								"type": "Single"
+							}
+						]
+					}
+				],
+				"x-bot-utter": [
+					{
+						"parameterName": "query",
+						"utter": "What do you want to query ?"
+					},
+					{
+						"parameterName": "limit",
+						"utter": "How many limits do you want to set ?"
+					}
+				],
+				"x-user-entity": [
+					{
+						"parameterName": "query",
+						"entityValue": [
+							"coffee",
+							"park"
+						]
+					},
+					{
+						"parameterName": "limit",
+						"regex": [
+							"^[0-4][0-9]$"
+						],
+						"entityValue": [
+							1,
+							34
+						]
+					}
+				],
+				"x-bot-jsonpPath-result": {
+					"item": 5,
+					"result": [
+						{
+							"title": "name",
+							"jsonPath": "$..venue.name"
+						},
+						{
+							"title": "address",
+							"jsonPath": "$..venue.location.address"
+						}
+					]
+				}
+			},
+			"servers": [
+				{
+					"url": "https://api.foursquare.com"
+				}
+			]
+		}
+	},
+	"components": {
+		
+	}
 }
