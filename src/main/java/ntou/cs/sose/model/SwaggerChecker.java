@@ -22,19 +22,18 @@ public class SwaggerChecker {
 	JSONObject jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/schema.json")));
 	JSONObject swagger;
 	Schema schema = SchemaLoader.load(jsonSchema);
-	HashMap<String, Object> errorJson = new HashMap<String, Object>();
+	HashMap<String, Object> swaggerErrorJson = new HashMap<String, Object>();
 	ArrayList<String> errorMessages = new ArrayList<String>();
 
-	public HashMap<String, Object> sc(JSONObject res) {
-		swagger = res;
+	public HashMap<String, Object> sc(JSONObject req) {
+		swagger = req;
 		if (jsonSchema()) {
-
+			checkInfo();
+			checkPaths();
 		}
-		checkInfo();
-		checkPaths();
 		System.out.println(errorMessages);
-		errorJson.put("error", errorMessages);
-		return errorJson;
+		swaggerErrorJson.put("chatbot-enabled swagger errors", errorMessages);
+		return swaggerErrorJson;
 	}
 
 	public boolean jsonSchema() {
