@@ -13,6 +13,9 @@ public class Test {
 		
 		InputOutputHandler ioc = new InputOutputHandler();
 		ioc.ioc(swagger);
-		System.out.println(ioc.ioc(swagger));
+		
+		ChatbotConfigurator chatbotConfigurator = new ChatbotConfigurator();
+		chatbotConfigurator.chatbotConfigurator(swagger);
+		System.out.println(ioc.setFlow());
 	}
 }
