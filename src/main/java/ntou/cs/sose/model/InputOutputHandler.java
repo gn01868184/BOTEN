@@ -62,27 +62,6 @@ public class InputOutputHandler {
 		return stories;
 	}
 
-	public ArrayList getAllPath() {
-		org.json.JSONObject paths = swagger.getJSONObject("paths");
-		Iterator<String> keys = paths.keys();
-		ArrayList pathsArr = new ArrayList();
-		while (keys.hasNext()) {
-			String key = keys.next();
-			pathsArr.add(key);
-		}
-		return pathsArr;
-	}
-
-	public ArrayList getAllFlow() {
-		ArrayList flowArr = new ArrayList();
-		try {
-			flowArr = JsonPath.read(swagger.toString(), "$.info..x-chatbotFlow..flowName");
-		} catch (ClassCastException e) {
-			System.out.println(e.getMessage());
-		}
-		return flowArr;
-	}
-
 	public ArrayList getAllParameter() {
 		ArrayList parArr = new ArrayList();
 		try {
@@ -178,20 +157,12 @@ public class InputOutputHandler {
 	}
 
 	public ArrayList setFlow() {
-		ArrayList allPath = getAllPath();
-		ArrayList allFlow = getAllFlow();
+		ArrayList allPath = GetInformation.getAllPath(swagger);
+		ArrayList allFlow = GetInformation.getAllFlow(swagger);
 		ArrayList flow = new ArrayList();
 		// change / to _
 		for (int i = 0; i < allPath.size(); i++) {
-			String path = (String) allPath.get(i);
-			ArrayList pathArr = new ArrayList();
-			String changePath = "";
-			for (String retval : path.split("/")) {
-				if (!retval.equals("")) {
-					changePath = changePath + retval + "_";
-				}
-			}
-			flow.add(changePath.substring(0, changePath.length() - 1));
+			flow.add(GetInformation.changeSign((String) allPath.get(i)));
 		}
 		flow.addAll(allFlow);
 		return flow;
