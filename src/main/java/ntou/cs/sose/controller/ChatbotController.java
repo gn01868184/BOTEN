@@ -1,5 +1,6 @@
 package ntou.cs.sose.controller;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,17 +9,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
-import ntou.cs.sose.model.HttpConnection;
+import ntou.cs.sose.model.MyHttpURLConnection;
+import ntou.cs.sose.entity.BotenSwagger;
+import ntou.cs.sose.model.ChatbotConfigurator;
 import ntou.cs.sose.model.InputOutputHandler;
 import ntou.cs.sose.model.SwaggerChecker;
-
-import org.json.*;
 
 @Controller
 @RequestMapping("/chatbot")
 public class ChatbotController {
-	String swagger;
-	JSONObject swaggerObj = new JSONObject();
+	BotenSwagger botenSwagger = new BotenSwagger();
 	Gson gson = new Gson();
 
 	@RequestMapping("/home")
@@ -29,22 +29,29 @@ public class ChatbotController {
 	@GetMapping(value = "/swaggerCheck", produces = "application/json")
 	@ResponseBody
 	public String swaggerCheck(@RequestParam String swaggerURL) {
-		HttpConnection httpConnection = new HttpConnection();
-		swagger = httpConnection.connection(swaggerURL);
-		swaggerObj = new JSONObject(swagger);
-		System.out.println(swaggerObj);
+		MyHttpURLConnection httpConnection = new MyHttpURLConnection();
+		String swagger = httpConnection.connection(swaggerURL);
+		botenSwagger.setSwagger(new JSONObject(swagger));
+		System.out.println(botenSwagger.getSwagger());
 
 		SwaggerChecker sc = new SwaggerChecker();
-		String json = gson.toJson(sc.sc(swaggerObj));
+		String json = gson.toJson(sc.sc(botenSwagger.getSwagger()));
 		return json.toString();
 	}
 
 	@GetMapping(value = "/InputOutputHandler", produces = "application/json")
 	@ResponseBody
-	public String test() {
+	public String inputOutputHandler() {
 		InputOutputHandler ioc = new InputOutputHandler();
-		String json = gson.toJson(ioc.ioc(swaggerObj));
+		String json = gson.toJson(ioc.ioc(botenSwagger.getSwagger()));
 		return json.toString();
 	}
 
+	@GetMapping(value = "/ChatbotConfigurator", produces = "application/json")
+	@ResponseBody
+	public String chatbotConfigurator() {
+		ChatbotConfigurator chatbotConfigurator = new ChatbotConfigurator();
+		String json = gson.toJson(chatbotConfigurator.chatbotConfigurator(botenSwagger.getSwagger()));
+		return json.toString();
+	}
 }
