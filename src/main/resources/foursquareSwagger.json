@@ -19,7 +19,19 @@
 					"/v2/venues/test2"
 				]
 			}
-		]
+		],
+		"x-input-template": {
+			"useEndpoint": [
+				"I want to get ${pathName}",
+				"I want to use ${pathName}"
+			],
+			"parameterList": [
+				"I want to see the ${pathName} parameters list"
+			],
+			"fillParameter": [
+				"Fill ${pathName}"
+			]
+		}
 	},
 	"servers": [
 		{
@@ -138,7 +150,8 @@
 					{
 						"parameterName": "limit",
 						"regex": [
-							"^[0-4][0-3]$","^[0-6]$"
+							"^[0-4][0-3]$",
+							"^[0-6]$"
 						],
 						"entityValue": [
 							1,
