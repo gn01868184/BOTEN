@@ -2,7 +2,6 @@ package ntou.cs.sose.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import org.everit.json.schema.Schema;
@@ -25,7 +24,7 @@ public class SwaggerChecker {
 	HashMap<String, Object> swaggerErrorJson = new HashMap<String, Object>();
 	ArrayList<String> errorMessages = new ArrayList<String>();
 
-	public HashMap<String, Object> sc(JSONObject req) {
+	public HashMap<String, Object> swaggerChecker(JSONObject req) {
 		swagger = req;
 		if (jsonSchema()) {
 			checkInfo();
@@ -55,7 +54,7 @@ public class SwaggerChecker {
 		// 檢查info-x-chatbotFlow與Swagger內的path是否對應
 		JSONObject info = swagger.getJSONObject("info");
 		if (info.has("x-chatbotFlow")) {
-			HashMap<String, Object> allFlow = getChatbotFlow();
+			HashMap<String, Object> allFlow = GetInformation.getChatbotFlow(swagger);
 			for (Object flowName : allFlow.keySet()) {
 				ArrayList pathsArr = (ArrayList) allFlow.get(flowName);
 				for (int i = 0; i < pathsArr.size(); i++) {
@@ -73,8 +72,7 @@ public class SwaggerChecker {
 
 	public void checkPaths() {
 		JSONObject paths = swagger.getJSONObject("paths");
-		ArrayList pathsArr = getAllPath();
-		System.out.println(pathsArr);
+		ArrayList pathsArr = GetInformation.getAllPath(swagger);
 		for (int i = 0; i < pathsArr.size(); i++) {
 			String path = (String) pathsArr.get(i);
 			JSONObject pathObj = paths.getJSONObject(path);
@@ -96,28 +94,11 @@ public class SwaggerChecker {
 		}
 	}
 
-	public HashMap<String, Object> getChatbotFlow() {
-		JSONObject info = swagger.getJSONObject("info");
-		org.json.JSONArray chatbotFlow = info.getJSONArray("x-chatbotFlow");
-		HashMap<String, Object> allFlow = new HashMap<String, Object>();
-		for (int i = 0; i < chatbotFlow.length(); i++) {
-			ArrayList pathsArr = new ArrayList();
-			org.json.JSONArray flowArray = chatbotFlow.getJSONObject(i).getJSONArray("flow");
-			String flowName = chatbotFlow.getJSONObject(i).getString("flowName");
-			for (int j = 0; j < flowArray.length(); j++) {
-				String flow = flowArray.getString(j);
-				pathsArr.add(flow);
-			}
-			allFlow.put(flowName, pathsArr);
-		}
-		return allFlow;
-	}
-
 	public void chatbotFlow(String path, JSONObject getObj) {
 		// 檢查x-chatbotFlow
 		try {
 			org.json.JSONArray chatbotFlow = getObj.getJSONArray("x-chatbotFlow");
-			HashMap<String, Object> allFlow = getChatbotFlow();
+			HashMap<String, Object> allFlow = GetInformation.getChatbotFlow(swagger);
 			for (int j = 0; j < chatbotFlow.length(); j++) {
 				boolean checkFlowName = false;
 				boolean checkPath = false;
@@ -264,17 +245,6 @@ public class SwaggerChecker {
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
 		}
-	}
-
-	public ArrayList getAllPath() {
-		org.json.JSONObject paths = swagger.getJSONObject("paths");
-		Iterator<String> keys = paths.keys();
-		ArrayList pathsArr = new ArrayList();
-		while (keys.hasNext()) {
-			String key = keys.next();
-			pathsArr.add(key);
-		}
-		return pathsArr;
 	}
 
 	public String jsonPath() {
