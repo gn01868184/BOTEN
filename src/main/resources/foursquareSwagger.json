@@ -16,7 +16,7 @@
 				"flowName": "suggeastVenues",
 				"flow": [
 					"/v2/venues/explore",
-					"/v2/venues/test2"
+					"/v2/venues/suggestcompletion"
 				]
 			}
 		],
