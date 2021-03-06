@@ -1,6 +1,7 @@
 package ntou.cs.sose.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONObject;
@@ -27,6 +28,23 @@ public class GetInformation {
 			System.out.println(e.getMessage());
 		}
 		return flowArr;
+	}
+
+	public static HashMap<String, Object> getChatbotFlow(JSONObject swagger) {
+		JSONObject info = swagger.getJSONObject("info");
+		org.json.JSONArray chatbotFlow = info.getJSONArray("x-chatbotFlow");
+		HashMap<String, Object> allFlow = new HashMap<String, Object>();
+		for (int i = 0; i < chatbotFlow.length(); i++) {
+			ArrayList pathsArr = new ArrayList();
+			org.json.JSONArray flowArray = chatbotFlow.getJSONObject(i).getJSONArray("flow");
+			String flowName = chatbotFlow.getJSONObject(i).getString("flowName");
+			for (int j = 0; j < flowArray.length(); j++) {
+				String flow = flowArray.getString(j);
+				pathsArr.add(flow);
+			}
+			allFlow.put(flowName, pathsArr);
+		}
+		return allFlow;
 	}
 
 	public static String changeSign(String pathName) {
