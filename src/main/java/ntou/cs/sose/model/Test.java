@@ -9,13 +9,13 @@ public class Test {
 	    Class tes = te.getClass();
 		JSONObject swagger = new JSONObject(new JSONTokener(tes.getResourceAsStream("/foursquareSwagger.json")));
 		SwaggerChecker sc = new SwaggerChecker();
-		sc.sc(swagger);
+		sc.swaggerChecker(swagger);
 		
 		InputOutputHandler ioc = new InputOutputHandler();
-		ioc.ioc(swagger);
+		ioc.inputOutputHandler(swagger);
 		
-		ChatbotConfigurator chatbotConfigurator = new ChatbotConfigurator();
-		chatbotConfigurator.chatbotConfigurator(swagger);
-		System.out.println(ioc.setFlow());
+		ChatbotConfigurator cc = new ChatbotConfigurator();
+		cc.chatbotConfigurator(swagger);
+		System.out.println(cc.botenConfig());
 	}
 }
