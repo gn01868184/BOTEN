@@ -3,7 +3,6 @@ package ntou.cs.sose.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.stream.Collectors;
 
 import org.json.JSONObject;
@@ -13,7 +12,7 @@ import com.jayway.jsonpath.JsonPath;
 public class InputOutputHandler {
 	JSONObject swagger;
 
-	public HashMap<String, Object> ioc(JSONObject req) {
+	public HashMap<String, Object> inputOutputHandler(JSONObject req) {
 		HashMap<String, Object> res = new HashMap<String, Object>();
 		swagger = req;
 		HashMap<String, Object> nlu = setNlu();
