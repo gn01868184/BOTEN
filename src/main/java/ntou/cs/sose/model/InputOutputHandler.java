@@ -9,12 +9,18 @@ import org.json.JSONObject;
 
 import com.jayway.jsonpath.JsonPath;
 
-public class InputOutputHandler {
-	JSONObject swagger;
+import ntou.cs.sose.entity.BotenSwagger;
 
-	public HashMap<String, Object> inputOutputHandler(JSONObject req) {
+public class InputOutputHandler {
+	private JSONObject swagger;
+	private ArrayList allPath;
+	private ArrayList allFlow;
+
+	public HashMap<String, Object> inputOutputHandler(BotenSwagger req) {
 		HashMap<String, Object> res = new HashMap<String, Object>();
-		swagger = req;
+		swagger = req.getSwagger();
+		allPath = req.allPath();
+		allFlow = req.allFlow();
 		HashMap<String, Object> nlu = setNlu();
 		HashMap<String, Object> domain = setDomain();
 		HashMap<String, Object> stories = setStories();
@@ -156,12 +162,10 @@ public class InputOutputHandler {
 	}
 
 	public ArrayList setFlow() {
-		ArrayList allPath = GetInformation.getAllPath(swagger);
-		ArrayList allFlow = GetInformation.getAllFlow(swagger);
 		ArrayList flow = new ArrayList();
 		// change / to _
 		for (int i = 0; i < allPath.size(); i++) {
-			flow.add(GetInformation.changeSign((String) allPath.get(i)));
+			flow.add(BotenSwagger.changeSign((String) allPath.get(i)));
 		}
 		flow.addAll(allFlow);
 		return flow;
