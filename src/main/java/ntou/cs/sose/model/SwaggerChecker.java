@@ -9,6 +9,7 @@ import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
 
 import net.minidev.json.JSONArray;
+import ntou.cs.sose.entity.BotenSwagger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,14 +19,19 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
 public class SwaggerChecker {
-	JSONObject jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/schema.json")));
-	JSONObject swagger;
-	Schema schema = SchemaLoader.load(jsonSchema);
-	HashMap<String, Object> swaggerErrorJson = new HashMap<String, Object>();
-	ArrayList<String> errorMessages = new ArrayList<String>();
+	private JSONObject jsonSchema = new JSONObject(new JSONTokener(getClass().getResourceAsStream("/schema.json")));
+	private Schema schema = SchemaLoader.load(jsonSchema);
+	private JSONObject swagger;
 
-	public HashMap<String, Object> swaggerChecker(JSONObject req) {
-		swagger = req;
+	private ArrayList allPath;
+	private HashMap<String, Object> chatbotFlow;
+	private HashMap<String, Object> swaggerErrorJson = new HashMap<String, Object>();
+	private ArrayList<String> errorMessages = new ArrayList<String>();
+
+	public HashMap<String, Object> swaggerChecker(BotenSwagger req) {
+		swagger = req.getSwagger();
+		chatbotFlow = req.chatbotFlow();
+		allPath = req.allPath();
 		if (jsonSchema()) {
 			checkInfo();
 			checkPaths();
@@ -54,9 +60,8 @@ public class SwaggerChecker {
 		// 檢查info-x-chatbotFlow與Swagger內的path是否對應
 		JSONObject info = swagger.getJSONObject("info");
 		if (info.has("x-chatbotFlow")) {
-			HashMap<String, Object> allFlow = GetInformation.getChatbotFlow(swagger);
-			for (Object flowName : allFlow.keySet()) {
-				ArrayList pathsArr = (ArrayList) allFlow.get(flowName);
+			for (Object flowName : chatbotFlow.keySet()) {
+				ArrayList pathsArr = (ArrayList) chatbotFlow.get(flowName);
 				for (int i = 0; i < pathsArr.size(); i++) {
 					try {
 						JsonPath.read(swagger.toString(), "$.paths." + pathsArr.get(i));
@@ -72,9 +77,8 @@ public class SwaggerChecker {
 
 	public void checkPaths() {
 		JSONObject paths = swagger.getJSONObject("paths");
-		ArrayList pathsArr = GetInformation.getAllPath(swagger);
-		for (int i = 0; i < pathsArr.size(); i++) {
-			String path = (String) pathsArr.get(i);
+		for (int i = 0; i < allPath.size(); i++) {
+			String path = (String) allPath.get(i);
 			JSONObject pathObj = paths.getJSONObject(path);
 			try {
 				JSONObject getObj = pathObj.getJSONObject("get");
@@ -97,16 +101,15 @@ public class SwaggerChecker {
 	public void chatbotFlow(String path, JSONObject getObj) {
 		// 檢查x-chatbotFlow
 		try {
-			org.json.JSONArray chatbotFlow = getObj.getJSONArray("x-chatbotFlow");
-			HashMap<String, Object> allFlow = GetInformation.getChatbotFlow(swagger);
-			for (int j = 0; j < chatbotFlow.length(); j++) {
+			org.json.JSONArray xChatbotFlow = getObj.getJSONArray("x-chatbotFlow");
+			for (int j = 0; j < xChatbotFlow.length(); j++) {
 				boolean checkFlowName = false;
 				boolean checkPath = false;
-				JSONObject flowObj = (JSONObject) chatbotFlow.get(j);
+				JSONObject flowObj = (JSONObject) xChatbotFlow.get(j);
 				// 檢查與info對應
-				for (Object flowName : allFlow.keySet()) {
+				for (Object flowName : chatbotFlow.keySet()) {
 					if (flowObj.getString("flowName").equals(flowName)) {
-						ArrayList flowPathsArr = (ArrayList) allFlow.get(flowName);
+						ArrayList flowPathsArr = (ArrayList) chatbotFlow.get(flowName);
 						for (int z = 0; z < flowPathsArr.size(); z++) {
 							if (flowPathsArr.get(z).equals(path)) {
 								checkPath = true;
