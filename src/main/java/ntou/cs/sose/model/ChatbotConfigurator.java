@@ -10,18 +10,26 @@ import org.json.JSONObject;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
-public class ChatbotConfigurator {
-	JSONObject swagger;
+import ntou.cs.sose.entity.BotenSwagger;
 
-	public HashMap<String, Object> chatbotConfigurator(JSONObject req) {
-		swagger = req;
-		return botenConfig();
+public class ChatbotConfigurator {
+	private JSONObject swagger;
+	private HashMap<String, Object> config;
+	private ArrayList allPath;
+	private ArrayList allFlow;
+	private HashMap<String, Object> chatbotFlow;
+
+	public HashMap<String, Object> chatbotConfigurator(BotenSwagger req) {
+		swagger = req.getSwagger();
+		allPath = req.allPath();
+		allFlow = req.allFlow();
+		chatbotFlow = req.chatbotFlow();
+		config = botenConfig();
+		return config;
 	}
 
 	public HashMap<String, Object> botenConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		ArrayList allPath = GetInformation.getAllPath(swagger);
-		ArrayList allFlow = GetInformation.getAllFlow(swagger);
 		try {
 			JSONArray servers = (JSONArray) swagger.get("servers");
 			String url = (String) ((JSONObject) servers.get(0)).get("url");
@@ -31,15 +39,14 @@ public class ChatbotConfigurator {
 		}
 		try {
 			for (int i = 0; i < allPath.size(); i++) {
-				config.put(GetInformation.changeSign((String) allPath.get(i)), setPath((String) allPath.get(i)));
+				config.put(BotenSwagger.changeSign((String) allPath.get(i)), setPath((String) allPath.get(i)));
 			}
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
 		}
 		try {
-			HashMap<String, Object> flowObj = GetInformation.getChatbotFlow(swagger);
 			for (int i = 0; i < allFlow.size(); i++) {
-				config.put((String) allFlow.get(i), setFlowParameters(flowObj, (String) allFlow.get(i)));
+				config.put((String) allFlow.get(i), setFlowParameters(chatbotFlow, (String) allFlow.get(i)));
 			}
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
