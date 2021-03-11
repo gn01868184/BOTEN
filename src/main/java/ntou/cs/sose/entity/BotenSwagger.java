@@ -15,6 +15,7 @@ public class BotenSwagger {
 	private JSONObject inputOutputConfig;
 	private JSONObject chatbotConfigurator;
 	private String nlu;
+	private String domain;
 	private String stories;
 
 	public JSONObject getSwagger() {
@@ -55,6 +56,14 @@ public class BotenSwagger {
 
 	public void setNlu(String nlu) {
 		this.nlu = nlu;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 
 	public String getStories() {
