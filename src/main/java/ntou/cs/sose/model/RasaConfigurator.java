@@ -31,6 +31,35 @@ public class RasaConfigurator {
 		return nlu;
 	}
 
+	public String domainConfigurator(JSONObject inputOutputConfig) {
+		String domain = "session_config:\n" + "  session_expiration_time: 60\n"
+				+ "  carry_over_slots_to_new_session: true\n";
+		JSONObject domainJsonObject = (JSONObject) inputOutputConfig.get("domain");
+		JSONArray intents = (JSONArray) domainJsonObject.get("intents");
+		domain += "intents:\n" + myArrayToString(intents);
+		JSONArray entities = (JSONArray) domainJsonObject.get("entities");
+		domain += "entities:\n" + myArrayToString(entities);
+		JSONObject slots = (JSONObject) domainJsonObject.get("slots");
+		domain += "slots:\n";
+		for (String slotsName : slots.keySet()) {
+			domain += "  " + slotsName + ":\n";
+			String type = ((JSONObject) slots.get(slotsName)).getString("type");
+			domain += "    type: " + type + "\n";
+		}
+		JSONObject responses = (JSONObject) domainJsonObject.get("utter");
+		domain += "responses:\n";
+		for (String utter : responses.keySet()) {
+			domain += "  " + utter + ":\n";
+			String text = responses.getString(utter);
+			domain += "  - text: " + text + "\n";
+		}
+		JSONArray actions = (JSONArray) domainJsonObject.get("actions");
+		domain += "actions:\n" + myArrayToString(actions);
+		JSONArray forms = (JSONArray) domainJsonObject.get("forms");
+		domain += "forms:\n" + myArrayToString(forms);
+		return domain;
+	}
+
 	public String storiesConfigurator(JSONObject inputOutputConfig) {
 		String stories = "";
 		JSONObject storiesJsonObject = (JSONObject) inputOutputConfig.get("stories");
@@ -48,5 +77,13 @@ public class RasaConfigurator {
 			stories += "\n";
 		}
 		return stories;
+	}
+
+	public String myArrayToString(JSONArray array) {
+		String text = "";
+		for (int i = 0; i < array.length(); i++) {
+			text += " - " + array.getString(i) + "\n";
+		}
+		return text;
 	}
 }
