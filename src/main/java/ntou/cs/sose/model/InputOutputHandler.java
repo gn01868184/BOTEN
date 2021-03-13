@@ -127,7 +127,7 @@ public class InputOutputHandler {
 						"$..[?(@.parameterName==\"" + notRepeatParma.get(i) + "\")].entityValue");
 				entityValueArr = (ArrayList) entityValue.get(0);
 				for (int j = 0; j < entityValueArr.size(); j++) {
-					inform.add("[" + notRepeatParma.get(i) + "](" + entityValueArr.get(j) + ")");
+					inform.add("[" + entityValueArr.get(j) + "](" + notRepeatParma.get(i) + ")");
 				}
 			}
 		} catch (ClassCastException e) {
