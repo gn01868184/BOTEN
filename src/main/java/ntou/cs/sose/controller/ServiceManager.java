@@ -23,20 +23,20 @@ public class ServiceManager {
 		SwaggerChecker sc = new SwaggerChecker();
 		String chatbotEnabledSwaggerErrors = gson.toJson(sc.swaggerChecker(botenSwagger));
 		botenSwagger.setChatbotEnabledSwaggerErrors(new JSONObject(chatbotEnabledSwaggerErrors));
-		return botenSwagger.getChatbotEnabledSwaggerErrors().toString();
+		return botenSwagger.getChatbotEnabledSwaggerErrors().toString(2);
 	}
 
 	public String doInputOutputHandler() {
 		InputOutputHandler ioc = new InputOutputHandler();
 		String inputOutputConfig = gson.toJson(ioc.inputOutputHandler(botenSwagger));
 		botenSwagger.setInputOutputConfig(new JSONObject(inputOutputConfig));
-		return botenSwagger.getInputOutputConfig().toString();
+		return botenSwagger.getInputOutputConfig().toString(2);
 	}
 
 	public String doChatbotConfigurator() {
 		ChatbotConfigurator cc = new ChatbotConfigurator();
 		String chatbotConfigurator = gson.toJson(cc.chatbotConfigurator(botenSwagger));
-		botenSwagger.setChatbotConfigurator(new JSONObject(chatbotConfigurator));
-		return botenSwagger.getChatbotConfigurator().toString();
+		botenSwagger.setBotenConfig(new JSONObject(chatbotConfigurator));
+		return botenSwagger.getBotenConfig().toString(2);
 	}
 }
