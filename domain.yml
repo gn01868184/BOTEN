@@ -1,0 +1,35 @@
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+intents:
+ - get_v2_venues_explore
+ - parameters_list_v2_venues_explore
+ - fill_parameters_v2_venues_explore
+ - get_v2_venues_suggestcompletion
+ - parameters_list_v2_venues_suggestcompletion
+ - fill_parameters_v2_venues_suggestcompletion
+ - get_suggeastVenues
+ - parameters_list_suggeastVenues
+ - fill_parameters_suggeastVenues
+entities:
+ - query
+ - limit
+slots:
+  query:
+    type: unfeaturized
+  limit:
+    type: unfeaturized
+responses:
+  utter_ask_query:
+  - text: What do you want to query ?
+  utter_ask_limit:
+  - text: How many limits do you want to set ?
+actions:
+ - utter_ask_query
+ - utter_ask_limit
+ - action_slots_values
+ - action_use_api
+forms:
+ - v2_venues_explore_form
+ - v2_venues_suggestcompletion_form
+ - suggeastVenues_form

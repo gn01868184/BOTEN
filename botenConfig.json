@@ -1,0 +1,112 @@
+{
+  "suggeastVenues": {
+    "parameters": [
+      {
+        "in": "query",
+        "name": "ll"
+      },
+      {
+        "in": "query",
+        "name": "v"
+      },
+      {
+        "in": "query",
+        "name": "limit"
+      },
+      {
+        "in": "query",
+        "name": "query"
+      },
+      {
+        "in": "query",
+        "name": "client_secret"
+      },
+      {
+        "in": "query",
+        "name": "client_id"
+      }
+    ],
+    "flow": [
+      {
+        "pathName": "/v2/venues/suggestcompletion",
+        "responseToSlots": [
+          {
+            "jsonPath": "$..id",
+            "parameterName": "v"
+          },
+          {
+            "jsonPath": "$..id",
+            "parameterName": "ll"
+          }
+        ]
+      },
+      {
+        "pathName": "/v2/venues/explore",
+        "getSlots": [{
+          "in": "path",
+          "parameterName": "v",
+          "type": "Single"
+        }]
+      }
+    ]
+  },
+  "v2_venues_explore": {
+    "pathName": "/v2/venues/explore",
+    "parameters": [
+      {
+        "in": "query",
+        "name": "ll"
+      },
+      {
+        "in": "query",
+        "name": "v"
+      },
+      {
+        "in": "query",
+        "name": "query"
+      },
+      {
+        "in": "query",
+        "name": "limit"
+      },
+      {
+        "in": "query",
+        "name": "client_secret"
+      },
+      {
+        "in": "query",
+        "name": "client_id"
+      }
+    ]
+  },
+  "v2_venues_suggestcompletion": {
+    "pathName": "/v2/venues/suggestcompletion",
+    "parameters": [
+      {
+        "in": "query",
+        "name": "ll"
+      },
+      {
+        "in": "query",
+        "name": "v"
+      },
+      {
+        "in": "query",
+        "name": "limit"
+      },
+      {
+        "in": "query",
+        "name": "query"
+      },
+      {
+        "in": "query",
+        "name": "client_secret"
+      },
+      {
+        "in": "query",
+        "name": "client_id"
+      }
+    ]
+  },
+  "url": "https://api.foursquare.com"
+}
