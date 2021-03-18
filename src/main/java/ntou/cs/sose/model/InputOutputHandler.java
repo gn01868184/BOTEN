@@ -248,7 +248,7 @@ public class InputOutputHandler {
 		actions.add(flow + "_form");
 		actions.add("form{\"name\": \"" + flow + "_form\"}");
 		actions.add("form{\"name\": \"null\"}");
-		intoPath.put("fill_" + flow, actions);
+		intoPath.put("fill_parameters_" + flow, actions);
 		return intoPath;
 	}
 
