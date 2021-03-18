@@ -5,6 +5,8 @@ import org.json.JSONTokener;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 
 import ntou.cs.sose.entity.BotenSwagger;
@@ -30,12 +32,17 @@ public class Test {
 		String inputOutputConfig = gson.toJson(ioc.inputOutputHandler(bs));
 		bs.setInputOutputConfig(new JSONObject(inputOutputConfig));
 
-		cc.chatbotConfigurator(bs);
-
 		bs.setNlu(rc.nluConfigurator(bs.getInputOutputConfig()));
 		bs.setDomain(rc.domainConfigurator(bs.getInputOutputConfig()));
 		bs.setStories(rc.storiesConfigurator(bs.getInputOutputConfig()));
 
+		// json beautifully
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
+		String chatbotConfigurator = gson.toJson(cc.chatbotConfigurator(bs));
+		bs.setBotenConfig(new JSONObject(chatbotConfigurator));
+		
 		FileWriter fw;
 		try {
 			fw = new FileWriter("nlu.md");
@@ -64,7 +71,16 @@ public class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(bs.getDomain());
-
+		try {
+			fw = new FileWriter("botenConfig.json");
+			fw.write(bs.getBotenConfig().toString(2));
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.print(cc.chatbotConfigurator(bs));
 	}
 }
