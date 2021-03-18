@@ -1,6 +1,7 @@
 package ntou.cs.sose.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -81,27 +82,37 @@ public class ChatbotConfigurator {
 		return flowParameters;
 	}
 
-	public HashMap<String, Object> getResponseToSlotsGetSlots(HashMap<String, Object> flowObj, String flowName) {
-		HashMap<String, Object> flow = new HashMap<String, Object>();
+	public ArrayList getResponseToSlotsGetSlots(HashMap<String, Object> flowObj, String flowName) {
+		ArrayList allFlow = new ArrayList();
 		ArrayList path = (ArrayList) flowObj.get(flowName);
 		for (int i = 0; i < path.size(); i++) {
+			HashMap<String, Object> flow = new HashMap<String, Object>();
 			flow.put("pathName", path.get(i));
 			try {
 				ArrayList responseToSlots = JsonPath.read(swagger.toString(), "$.paths." + path.get(i)
-						+ ".get.x-chatbotFlow..[?(@.flowName==\"" + flowName + "\")]..responseToSlots");
+						+ ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].responseToSlots");
 				ArrayList getSlots = JsonPath.read(swagger.toString(), "$.paths." + path.get(i)
-						+ ".get.x-chatbotFlow..[?(@.flowName==\"" + flowName + "\")]..getSlots");
-				if (responseToSlots.equals(null)) {
-					flow.put("responseToSlots", responseToSlots.get(0));
+						+ ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
+				if (!responseToSlots.equals(new ArrayList())) {
+					ArrayList responseToSlotsArr = new ArrayList();
+					for (int j = 0; j < responseToSlots.size(); j++) {
+						responseToSlotsArr.addAll((Collection) responseToSlots.get(j));
+					}
+					flow.put("responseToSlots", responseToSlotsArr);
 				}
-				if (getSlots.equals(null)) {
-					flow.put("getSlots", getSlots.get(0));
+				if (!getSlots.equals(new ArrayList())) {
+					ArrayList getSlotsArr = new ArrayList();
+					for (int j = 0; j < getSlots.size(); j++) {
+						getSlotsArr.addAll((Collection) getSlots.get(j));
+					}
+					flow.put("getSlots", getSlotsArr);
 				}
 			} catch (PathNotFoundException e) {
 				System.out.println(e.getMessage());
 			}
+			allFlow.add(flow);
 		}
-		return flow;
+		return allFlow;
 	}
 
 	public ArrayList removeRepeatParameters(HashMap<String, Object> flowObj, String flowName) {
