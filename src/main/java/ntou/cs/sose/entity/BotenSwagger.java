@@ -13,7 +13,7 @@ public class BotenSwagger {
 	private JSONObject swagger;
 	private JSONObject chatbotEnabledSwaggerErrors;
 	private JSONObject inputOutputConfig;
-	private JSONObject chatbotConfigurator;
+	private JSONObject botenConfig;
 	private String nlu;
 	private String domain;
 	private String stories;
@@ -42,12 +42,12 @@ public class BotenSwagger {
 		this.inputOutputConfig = inputOutputConfig;
 	}
 
-	public JSONObject getChatbotConfigurator() {
-		return chatbotConfigurator;
+	public JSONObject getBotenConfig() {
+		return botenConfig;
 	}
 
-	public void setChatbotConfigurator(JSONObject chatbotConfigurator) {
-		this.chatbotConfigurator = chatbotConfigurator;
+	public void setBotenConfig(JSONObject botenConfig) {
+		this.botenConfig = botenConfig;
 	}
 
 	public String getNlu() {
