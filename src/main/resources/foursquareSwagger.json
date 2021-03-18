@@ -6,17 +6,10 @@
 		"version": "0.1",
 		"x-chatbotFlow": [
 			{
-				"flowName": "flow1",
-				"flow": [
-					"/v2/venues/explore",
-					"/v2/venues/suggestcompletion"
-				]
-			},
-			{
 				"flowName": "suggeastVenues",
 				"flow": [
-					"/v2/venues/explore",
-					"/v2/venues/suggestcompletion"
+					"/v2/venues/suggestcompletion",
+					"/v2/venues/explore"
 				]
 			}
 		],
@@ -46,7 +39,7 @@
 					{
 						"name": "ll",
 						"in": "query",
-						"required": true,
+						"required": false,
 						"style": "form",
 						"explode": true,
 						"schema": {
@@ -66,9 +59,20 @@
 						"example": "20180323"
 					},
 					{
-						"name": "query",
+						"name": "limit",
 						"in": "query",
 						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "20180323"
+					},
+					{
+						"name": "query",
+						"in": "query",
+						"required": true,
 						"style": "form",
 						"explode": true,
 						"schema": {
@@ -114,24 +118,24 @@
 						"flowName": "suggeastVenues",
 						"responseToSlots": [
 							{
-								"parameterName": "venueId",
+								"parameterName": "v",
 								"jsonPath": "$..id"
 							}
 						]
 					},
 					{
-						"flowName": "flow2",
+						"flowName": "suggeastVenues",
 						"responseToSlots": [
 							{
-								"parameterName": "v",
-								"jsonPath": "1"
+								"parameterName": "ll",
+								"jsonPath": "$..id"
 							}
 						]
 					}
 				],
 				"x-bot-utter": [
 					{
-						"parameterName": "query2",
+						"parameterName": "query",
 						"utter": "What do you want to query ?"
 					},
 					{
@@ -217,6 +221,17 @@
 						"example": "Coffee"
 					},
 					{
+						"name": "limit",
+						"in": "query",
+						"required": false,
+						"style": "form",
+						"explode": true,
+						"schema": {
+							"type": "string"
+						},
+						"example": "1"
+					},
+					{
 						"name": "client_secret",
 						"in": "query",
 						"required": false,
@@ -255,22 +270,7 @@
 						"getSlots": [
 							{
 								"in": "path",
-								"parameterName": "venueId",
-								"type": "Single"
-							},
-							{
-								"in": "path",
-								"parameterName": "venueId2",
-								"type": "Single"
-							}
-						]
-					},
-					{
-						"flowName": "gu",
-						"getSlots": [
-							{
-								"in": "path",
-								"parameterName": "test",
+								"parameterName": "v",
 								"type": "Single"
 							}
 						]
