@@ -5,8 +5,6 @@ import org.json.JSONTokener;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 
 import ntou.cs.sose.entity.BotenSwagger;
@@ -35,10 +33,6 @@ public class Test {
 		bs.setNlu(rc.nluConfigurator(bs.getInputOutputConfig()));
 		bs.setDomain(rc.domainConfigurator(bs.getInputOutputConfig()));
 		bs.setStories(rc.storiesConfigurator(bs.getInputOutputConfig()));
-
-		// json beautifully
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
 		String chatbotConfigurator = gson.toJson(cc.chatbotConfigurator(bs));
 		bs.setBotenConfig(new JSONObject(chatbotConfigurator));
