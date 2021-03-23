@@ -218,12 +218,8 @@ public class InputOutputHandler {
 	}
 
 	public ArrayList setForms() {
-		ArrayList flow = setFlow();
 		ArrayList forms = new ArrayList();
-		HashMap<String, Object> formsObj = new HashMap<String, Object>();
-		for (int i = 0; i < flow.size(); i++) {
-			forms.add(flow.get(i) + "_form");
-		}
+		forms.add("parameters_form");
 		return forms;
 	}
 
@@ -245,9 +241,9 @@ public class InputOutputHandler {
 	public HashMap<String, Object> setIntoPath(String flow) {
 		ArrayList actions = new ArrayList();
 		HashMap<String, Object> intoPath = new HashMap<String, Object>();
-		actions.add(flow + "_form");
-		actions.add("form{\"name\": \"" + flow + "_form\"}");
-		actions.add("form{\"name\": \"null\"}");
+		actions.add("parameters_form");
+		actions.add("form{\"name\": \"parameters_form\"}");
+		actions.add("form{\"name\": null}");
 		intoPath.put("fill_parameters_" + flow, actions);
 		return intoPath;
 	}
