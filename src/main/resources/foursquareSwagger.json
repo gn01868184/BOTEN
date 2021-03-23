@@ -9,7 +9,7 @@
 				"flowName": "suggeastVenues",
 				"flow": [
 					"/v2/venues/suggestcompletion",
-					"/v2/venues/explore"
+					"/v2/venues/{VENUE_ID}"
 				]
 			}
 		],
@@ -118,16 +118,7 @@
 						"flowName": "suggeastVenues",
 						"responseToSlots": [
 							{
-								"parameterName": "v",
-								"jsonPath": "$..id"
-							}
-						]
-					},
-					{
-						"flowName": "suggeastVenues",
-						"responseToSlots": [
-							{
-								"parameterName": "ll",
+								"parameterName": "VENUE_ID",
 								"jsonPath": "$..id"
 							}
 						]
@@ -136,11 +127,27 @@
 				"x-bot-utter": [
 					{
 						"parameterName": "query",
-						"utter": "What do you want to query ?"
+						"utter": "What do you want to query?"
 					},
 					{
 						"parameterName": "limit",
-						"utter": "How many limits do you want to set ?"
+						"utter": "How many limits do you want to set?"
+					},
+					{
+						"parameterName": "client_id",
+						"utter": "What's your' client_id?"
+					},
+					{
+						"parameterName": "client_secret",
+						"utter": "What's your' client_secret?"
+					},
+					{
+						"parameterName": "v",
+						"utter": "What is the version?"
+					},
+					{
+						"parameterName": "ll",
+						"utter": "What is the latitude and longitude ?"
 					}
 				],
 				"x-user-entity": [
@@ -161,6 +168,30 @@
 							1,
 							34
 						]
+					},
+					{
+						"parameterName": "client_id",
+						"entityValue": [
+							"RQQRFNZSMYRZDWCAQFC5RNAM0SWIAONSWWRYCR2PJXW5TQXR"
+						]
+					},
+					{
+						"parameterName": "client_secret",
+						"entityValue": [
+							"UGUD420J2ASQC3NZXQIFSPHFFK24GQDOWBD0LNT3OVMV4VZ2"
+						]
+					},
+					{
+						"parameterName": "v",
+						"entityValue": [
+							"20180323"
+						]
+					},
+					{
+						"parameterName": "ll",
+						"entityValue": [
+							"25.129253,121.736299"
+						]
 					}
 				],
 				"x-bot-jsonpPath-result": {
@@ -168,11 +199,11 @@
 					"result": [
 						{
 							"title": "name",
-							"jsonPath": "$..venue.name"
+							"jsonPath": "$.response.minivenues[*].name"
 						},
 						{
 							"title": "address",
-							"jsonPath": "$..venue.location.address"
+							"jsonPath": "$.response.minivenues[*].location.address"
 						}
 					]
 				}
@@ -183,13 +214,13 @@
 				}
 			]
 		},
-		"/v2/venues/explore": {
+		"/v2/venues/{VENUE_ID}": {
 			"get": {
 				"description": "Auto generated using Swagger Inspector",
 				"parameters": [
 					{
-						"name": "ll",
-						"in": "query",
+						"name": "VENUE_ID",
+						"in": "path",
 						"required": false,
 						"style": "form",
 						"explode": true,
@@ -208,28 +239,6 @@
 							"type": "string"
 						},
 						"example": "20180323"
-					},
-					{
-						"name": "query",
-						"in": "query",
-						"required": false,
-						"style": "form",
-						"explode": true,
-						"schema": {
-							"type": "string"
-						},
-						"example": "Coffee"
-					},
-					{
-						"name": "limit",
-						"in": "query",
-						"required": false,
-						"style": "form",
-						"explode": true,
-						"schema": {
-							"type": "string"
-						},
-						"example": "1"
 					},
 					{
 						"name": "client_secret",
@@ -270,7 +279,7 @@
 						"getSlots": [
 							{
 								"in": "path",
-								"parameterName": "v",
+								"parameterName": "VENUE_ID",
 								"type": "Single"
 							}
 						]
@@ -278,30 +287,45 @@
 				],
 				"x-bot-utter": [
 					{
-						"parameterName": "query",
-						"utter": "What do you want to query ?"
+						"parameterName": "client_id",
+						"utter": "What's your' client_id?"
 					},
 					{
-						"parameterName": "limit",
-						"utter": "How many limits do you want to set ?"
+						"parameterName": "client_secret",
+						"utter": "What's your' client_secret?"
+					},
+					{
+						"parameterName": "v",
+						"utter": "What is the version?"
+					},
+					{
+						"parameterName": "VENUE_ID",
+						"utter": "What is the VENUE_ID ?"
 					}
 				],
 				"x-user-entity": [
 					{
-						"parameterName": "query",
+						"parameterName": "client_id",
 						"entityValue": [
-							"coffee",
-							"park"
+							"RQQRFNZSMYRZDWCAQFC5RNAM0SWIAONSWWRYCR2PJXW5TQXR"
 						]
 					},
 					{
-						"parameterName": "limit",
-						"regex": [
-							"^[0-4][0-9]$"
-						],
+						"parameterName": "client_secret",
 						"entityValue": [
-							1,
-							34
+							"UGUD420J2ASQC3NZXQIFSPHFFK24GQDOWBD0LNT3OVMV4VZ2"
+						]
+					},
+					{
+						"parameterName": "VENUE_ID",
+						"entityValue": [
+							"5a7bc15e2347246d52fb7cee"
+						]
+					},
+					{
+						"parameterName": "v",
+						"entityValue": [
+							"20180323"
 						]
 					}
 				],
