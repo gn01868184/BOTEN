@@ -24,63 +24,45 @@
       {
         "in": "query",
         "name": "client_id"
+      },
+      {
+        "in": "path",
+        "name": "VENUE_ID"
       }
     ],
     "flow": [
       {
         "pathName": "/v2/venues/suggestcompletion",
-        "responseToSlots": [
-          {
-            "jsonPath": "$..id",
-            "parameterName": "v"
-          },
-          {
-            "jsonPath": "$..id",
-            "parameterName": "ll"
-          }
-        ]
+        "responseToSlots": [{
+          "jsonPath": "$..id",
+          "parameterName": "VENUE_ID"
+        }]
       },
       {
-        "pathName": "/v2/venues/explore",
+        "pathName": "/v2/venues/{VENUE_ID}",
         "getSlots": [{
           "in": "path",
-          "parameterName": "v",
+          "parameterName": "VENUE_ID",
           "type": "Single"
         }]
       }
     ]
   },
-  "v2_venues_explore": {
-    "pathName": "/v2/venues/explore",
-    "parameters": [
-      {
-        "in": "query",
-        "name": "ll"
-      },
-      {
-        "in": "query",
-        "name": "v"
-      },
-      {
-        "in": "query",
-        "name": "query"
-      },
-      {
-        "in": "query",
-        "name": "limit"
-      },
-      {
-        "in": "query",
-        "name": "client_secret"
-      },
-      {
-        "in": "query",
-        "name": "client_id"
-      }
-    ]
-  },
   "v2_venues_suggestcompletion": {
     "pathName": "/v2/venues/suggestcompletion",
+    "x-bot-jsonpPath-result": {
+      "result": [
+        {
+          "jsonPath": "$.response.minivenues[*].name",
+          "title": "name"
+        },
+        {
+          "jsonPath": "$.response.minivenues[*].location.address",
+          "title": "address"
+        }
+      ],
+      "item": 5
+    },
     "parameters": [
       {
         "in": "query",
@@ -108,5 +90,39 @@
       }
     ]
   },
-  "url": "https://api.foursquare.com"
+  "url": "https://api.foursquare.com",
+  "v2_venues_{VENUE_ID}": {
+    "pathName": "/v2/venues/{VENUE_ID}",
+    "x-bot-jsonpPath-result": {
+      "result": [
+        {
+          "jsonPath": "$..venue.name",
+          "title": "name"
+        },
+        {
+          "jsonPath": "$..venue.location.address",
+          "title": "address"
+        }
+      ],
+      "item": 5
+    },
+    "parameters": [
+      {
+        "in": "path",
+        "name": "VENUE_ID"
+      },
+      {
+        "in": "query",
+        "name": "v"
+      },
+      {
+        "in": "query",
+        "name": "client_secret"
+      },
+      {
+        "in": "query",
+        "name": "client_id"
+      }
+    ]
+  }
 }
