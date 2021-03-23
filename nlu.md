@@ -1,17 +1,17 @@
 ## intent:parameters_list_v2_venues_suggestcompletion
 - I want to see the v2_venues_suggestcompletion parameters list
-- see the v2_venues_suggestcompletion parameters list
+- v2_venues_suggestcompletion parameters list
 
 ## intent:fill_parameters_v2_venues_suggestcompletion
-- Fill in the v2_venues_suggestcompletion parameters
+- Fill in the v2_venues_suggestcompletion
 - Fill v2_venues_suggestcompletion
 
 ## intent:parameters_list_suggeastVenues
 - I want to see the suggeastVenues parameters list
-- see the suggeastVenues parameters list
+- suggeastVenues parameters list
 
 ## intent:fill_parameters_suggeastVenues
-- Fill in the suggeastVenues parameters
+- Fill in the suggeastVenues
 - Fill suggeastVenues
 
 ## intent:inform
@@ -27,14 +27,14 @@
 
 ## intent:parameters_list_v2_venues_{VENUE_ID}
 - I want to see the v2_venues_{VENUE_ID} parameters list
-- see the v2_venues_{VENUE_ID} parameters list
+- v2_venues_{VENUE_ID} parameters list
 
 ## intent:get_v2_venues_{VENUE_ID}
 - I want to get v2_venues_{VENUE_ID}
 - I want to use v2_venues_{VENUE_ID}
 
 ## intent:fill_parameters_v2_venues_{VENUE_ID}
-- Fill in the v2_venues_{VENUE_ID} parameters
+- Fill in the v2_venues_{VENUE_ID}
 - Fill v2_venues_{VENUE_ID}
 
 ## intent:get_v2_venues_suggestcompletion
