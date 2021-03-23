@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jayway.jsonpath.JsonPath;
@@ -93,23 +95,67 @@ public class InputOutputHandler {
 
 	public ArrayList setGetIntent(String flow) {
 		ArrayList train = new ArrayList();
-		train.add("I want to get " + flow);
-		train.add("I want to use " + flow);
+		try {
+			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
+					.get("useEndpoint");
+			for(int i=0;i<template.length();i++) {
+				train.add(captureTemplate(flow, template.getString(i)));
+			}
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+			train.add("I want to get " + flow);
+			train.add("I want to use " + flow);
+		}
 		return train;
 	}
 
 	public ArrayList setParametersListIntent(String flow) {
 		ArrayList train = new ArrayList();
-		train.add("I want to see the " + flow + " parameters list");
-		train.add("see the " + flow + " parameters list");
+		try {
+			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
+					.get("parameterList");
+			for(int i=0;i<template.length();i++) {
+				train.add(captureTemplate(flow, template.getString(i)));
+			}
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+			train.add("I want to see the " + flow + " parameters list");
+			train.add("see the " + flow + " parameters list");
+		}
 		return train;
 	}
 
 	public ArrayList setFillParameters(String flow) {
 		ArrayList train = new ArrayList();
-		train.add("Fill in the " + flow + " parameters");
-		train.add("Fill " + flow);
+		try {
+			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
+					.get("fillParameter");
+			for(int i=0;i<template.length();i++) {
+				train.add(captureTemplate(flow, template.getString(i)));
+			}
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+			train.add("Fill in the " + flow + " parameters");
+			train.add("Fill " + flow);
+		}
 		return train;
+	}
+
+	public String captureTemplate(String flow, String template) {
+		String captureTemplate = "";
+		try {
+			String[] templateArr = template.split("\\$\\{");
+			String[] templateBack = templateArr[1].split("\\}");
+			captureTemplate = templateArr[0] + flow;
+			try {
+				captureTemplate += templateBack[1];
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("ArrayIndexOutOfBoundsException: " + e.getMessage());
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("ArrayIndexOutOfBoundsException: " + e.getMessage());
+		}
+		return captureTemplate;
 	}
 
 	public ArrayList setInformIntent() {
