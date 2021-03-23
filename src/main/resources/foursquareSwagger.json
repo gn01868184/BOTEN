@@ -19,9 +19,11 @@
 				"I want to use ${pathName}"
 			],
 			"parameterList": [
-				"I want to see the ${pathName} parameters list"
+				"I want to see the ${pathName} parameters list",
+				"${pathName} parameters list"
 			],
 			"fillParameter": [
+				"Fill in the ${pathName}",
 				"Fill ${pathName}"
 			]
 		}
