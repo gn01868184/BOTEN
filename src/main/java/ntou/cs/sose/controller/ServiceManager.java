@@ -8,6 +8,7 @@ import ntou.cs.sose.entity.BotenSwagger;
 import ntou.cs.sose.model.ChatbotConfigurator;
 import ntou.cs.sose.model.InputOutputHandler;
 import ntou.cs.sose.model.MyHttpURLConnection;
+import ntou.cs.sose.model.RasaConfigurator;
 import ntou.cs.sose.model.SwaggerChecker;
 
 public class ServiceManager {
@@ -35,8 +36,24 @@ public class ServiceManager {
 
 	public String doChatbotConfigurator() {
 		ChatbotConfigurator cc = new ChatbotConfigurator();
+		RasaConfigurator rc = new RasaConfigurator();
 		String chatbotConfigurator = gson.toJson(cc.chatbotConfigurator(botenSwagger));
 		botenSwagger.setBotenConfig(new JSONObject(chatbotConfigurator));
+		botenSwagger.setNlu(rc.nluConfigurator(botenSwagger.getInputOutputConfig()));
+		botenSwagger.setDomain(rc.domainConfigurator(botenSwagger.getInputOutputConfig()));
+		botenSwagger.setStories(rc.storiesConfigurator(botenSwagger.getInputOutputConfig()));
 		return botenSwagger.getBotenConfig().toString(2);
+	}
+
+	public String showNlu() {
+		return botenSwagger.getNlu();
+	}
+
+	public String showDomain() {
+		return botenSwagger.getDomain();
+	}
+
+	public String showStories() {
+		return botenSwagger.getStories();
 	}
 }
