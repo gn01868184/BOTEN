@@ -27,10 +27,28 @@ public class ChatbotController {
 	public String inputOutputHandler() {
 		return serviceManager.doInputOutputHandler();
 	}
-	
+
 	@GetMapping(value = "/ChatbotConfigurator", produces = "application/json")
 	@ResponseBody
 	public String chatbotConfigurator() {
 		return serviceManager.doChatbotConfigurator();
+	}
+
+	@GetMapping(value = "/Nlu", produces = "application/json")
+	@ResponseBody
+	public String showNlu() {
+		return serviceManager.showNlu();
+	}
+
+	@GetMapping(value = "/Domain", produces = "application/json")
+	@ResponseBody
+	public String showDomain() {
+		return serviceManager.showDomain();
+	}
+
+	@GetMapping(value = "/Stories", produces = "application/json")
+	@ResponseBody
+	public String showStories() {
+		return serviceManager.showStories();
 	}
 }
