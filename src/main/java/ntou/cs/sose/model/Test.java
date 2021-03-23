@@ -75,6 +75,6 @@ public class Test {
 			e.printStackTrace();
 		}
 		
-		System.out.print(cc.chatbotConfigurator(bs));
+		System.out.print(sc.swaggerChecker(bs));
 	}
 }
