@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
@@ -56,21 +58,39 @@ public class ChatbotConfigurator {
 	}
 
 	public HashMap<String, Object> setPath(String pathName) {
+		Gson gson = new Gson();
 		HashMap<String, Object> pathObj = new HashMap<String, Object>();
+		String result = ((JSONObject) ((JSONObject) ((JSONObject) swagger.get("paths")).get(pathName)).get("get"))
+				.get("x-bot-jsonpPath-result").toString();
+		HashMap<String, Object> resultObj = gson.fromJson(result, new TypeToken<HashMap<String, Object>>() {
+		}.getType());
 		pathObj.put("pathName", pathName);
 		pathObj.put("parameters", getParameters(pathName));
+		pathObj.put("x-bot-jsonpPath-result", resultObj);
 		return pathObj;
 	}
 
 	public ArrayList getParameters(String pathName) {
 		ArrayList pathObj = new ArrayList();
+		ArrayList utterParameterName = new ArrayList();
 		JSONArray parameters = (JSONArray) ((JSONObject) ((JSONObject) ((JSONObject) swagger.get("paths"))
 				.get(pathName)).get("get")).get("parameters");
+		try {
+			utterParameterName = JsonPath.read(swagger.toString(),
+					"$.paths." + pathName + ".get.x-bot-utter[*].parameterName");
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		} catch (PathNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
 		for (int i = 0; i < parameters.length(); i++) {
-			HashMap<String, Object> parametersObj = new HashMap<String, Object>();
-			parametersObj.put("in", ((JSONObject) parameters.get(i)).get("in"));
-			parametersObj.put("name", ((JSONObject) parameters.get(i)).get("name"));
-			pathObj.add(parametersObj);
+			if (utterParameterName.contains(((JSONObject) parameters.get(i)).get("name"))) {
+				HashMap<String, Object> parametersObj = new HashMap<String, Object>();
+				parametersObj.put("in", ((JSONObject) parameters.get(i)).get("in"));
+				parametersObj.put("name", ((JSONObject) parameters.get(i)).get("name"));
+				pathObj.add(parametersObj);
+			}
+
 		}
 		return pathObj;
 	}
@@ -91,8 +111,8 @@ public class ChatbotConfigurator {
 			try {
 				ArrayList responseToSlots = JsonPath.read(swagger.toString(), "$.paths." + path.get(i)
 						+ ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].responseToSlots");
-				ArrayList getSlots = JsonPath.read(swagger.toString(), "$.paths." + path.get(i)
-						+ ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
+				ArrayList getSlots = JsonPath.read(swagger.toString(),
+						"$.paths." + path.get(i) + ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
 				if (!responseToSlots.equals(new ArrayList())) {
 					ArrayList responseToSlotsArr = new ArrayList();
 					for (int j = 0; j < responseToSlots.size(); j++) {
