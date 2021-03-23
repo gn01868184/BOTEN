@@ -2,7 +2,6 @@ package ntou.cs.sose.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
@@ -214,7 +213,7 @@ public class SwaggerChecker {
 				}
 			}
 			// 檢查x-user-entity填寫的參數x-bot-utter是否有填
-			for (int j = 0; j < botParArr.size(); j++) {
+			for (int j = 0; j < userParArr.size(); j++) {
 				String userParameter = (String) userParArr.get(j);
 				if (!botParArr.contains(userParameter)) {
 					errorMessages
@@ -250,20 +249,11 @@ public class SwaggerChecker {
 		}
 	}
 
-	public String jsonPath() {
-		try {
-			LinkedHashMap<Object, Object> author0 = JsonPath.read(swagger.toString(), "$.paths");
-			System.out.println(author0);
-		} catch (ClassCastException e) {
-			System.out.println(e.getMessage());
-		}
-		return null;
-	}
-
 	public Boolean checkJsonPath(String jsonPath) {
 		// 驗證jsonPath是否輸入正確
+		// 無法驗證，只能看有沒有那個值
 		try {
-			String json = "{\"test_data\" : \"This is the test message\"}";
+			String json = "{\"response\" : \"This is the test message\"}";
 			JSONArray authors = JsonPath.read(json, jsonPath);
 			return true;
 		} catch (ClassCastException e) {
@@ -271,8 +261,9 @@ public class SwaggerChecker {
 			return true;
 		} catch (PathNotFoundException e) {
 			System.out.println(e.getMessage());
-			return false;
+			return true;
 		}
+
 	}
 
 	public Boolean checkParameterName(String path, String params) {
