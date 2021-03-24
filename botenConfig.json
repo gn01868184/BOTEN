@@ -32,19 +32,19 @@
     ],
     "flow": [
       {
-        "pathName": "/v2/venues/suggestcompletion",
         "responseToSlots": [{
           "jsonPath": "$..id",
           "parameterName": "VENUE_ID"
-        }]
+        }],
+        "intent": "v2_venues_suggestcompletion"
       },
       {
-        "pathName": "/v2/venues/{VENUE_ID}",
         "getSlots": [{
           "in": "path",
           "parameterName": "VENUE_ID",
           "type": "Single"
-        }]
+        }],
+        "intent": "v2_venues_{VENUE_ID}"
       }
     ]
   },
