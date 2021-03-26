@@ -121,7 +121,7 @@
 						"responseToSlots": [
 							{
 								"parameterName": "VENUE_ID",
-								"jsonPath": "$..id"
+								"jsonPath": "$.response.minivenues[*].id"
 							}
 						]
 					}
