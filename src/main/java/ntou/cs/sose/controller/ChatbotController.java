@@ -1,6 +1,7 @@
 package ntou.cs.sose.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +17,7 @@ public class ChatbotController {
 		return "index";
 	}
 
-	@GetMapping(value = "/swaggerCheck", produces = "application/json")
+	@GetMapping(value = "/SwaggerCheck", produces = "application/json")
 	@ResponseBody
 	public String swaggerCheck(@RequestParam String swaggerURL) {
 		return serviceManager.doSwaggerCheck(swaggerURL);
@@ -28,25 +29,25 @@ public class ChatbotController {
 		return serviceManager.doInputOutputHandler();
 	}
 
-	@GetMapping(value = "/ChatbotConfigurator", produces = "application/json")
+	@GetMapping(value = "/botenConfig.json", produces = "application/json")
 	@ResponseBody
 	public String chatbotConfigurator() {
 		return serviceManager.doChatbotConfigurator();
 	}
 
-	@GetMapping(value = "/Nlu", produces = "application/json")
+	@GetMapping(value = "/nlu.md", produces = "application/json")
 	@ResponseBody
 	public String showNlu() {
 		return serviceManager.showNlu();
 	}
 
-	@GetMapping(value = "/Domain", produces = "application/json")
+	@GetMapping(value = "/domain.yml", produces = "application/json")
 	@ResponseBody
 	public String showDomain() {
 		return serviceManager.showDomain();
 	}
 
-	@GetMapping(value = "/Stories", produces = "application/json")
+	@GetMapping(value = "/stories.md", produces = "application/json")
 	@ResponseBody
 	public String showStories() {
 		return serviceManager.showStories();
