@@ -56,4 +56,5 @@ public class ServiceManager {
 	public String showStories() {
 		return botenSwagger.getStories();
 	}
+
 }
