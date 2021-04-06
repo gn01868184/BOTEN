@@ -71,7 +71,7 @@
       $("#rasaConfigForm").submit(function(e) {
         $.ajax({
           type: "GET",
-          url: './ChatbotConfigurator',
+          url: './botenConfig.json',
           dataType: 'json',
           success: function(data) {
             $('body').append(

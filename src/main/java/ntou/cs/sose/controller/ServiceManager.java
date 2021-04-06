@@ -23,7 +23,9 @@ public class ServiceManager {
 
 		SwaggerChecker sc = new SwaggerChecker();
 		String chatbotEnabledSwaggerErrors = gson.toJson(sc.swaggerChecker(botenSwagger));
+
 		botenSwagger.setChatbotEnabledSwaggerErrors(new JSONObject(chatbotEnabledSwaggerErrors));
+		
 		return botenSwagger.getChatbotEnabledSwaggerErrors().toString(2);
 	}
 

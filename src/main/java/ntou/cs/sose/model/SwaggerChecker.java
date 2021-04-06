@@ -46,11 +46,8 @@ public class SwaggerChecker {
 			return true;
 		} catch (ValidationException e) {
 			System.out.println("jsonSchema:");
-			// prints all ValidationException
-			e.getCausingExceptions().stream().map(ValidationException::getMessage).forEach(x -> {
-				System.out.println(x);
-				errorMessages.add(x);
-			});
+			System.out.println(e.getMessage());
+			errorMessages.add(e.getMessage());
 			return false;
 		}
 	}

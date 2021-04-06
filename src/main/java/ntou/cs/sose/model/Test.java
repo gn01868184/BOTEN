@@ -15,66 +15,23 @@ public class Test {
 
 		Test te = new Test();
 		Class tes = te.getClass();
-		JSONObject swagger = new JSONObject(new JSONTokener(tes.getResourceAsStream("/foursquareSwagger.json")));
 
-		BotenSwagger bs = new BotenSwagger();
-		bs.setSwagger(swagger);
+		BotenSwagger botenSwagger = new BotenSwagger();
 
 		SwaggerChecker sc = new SwaggerChecker();
 		InputOutputHandler ioc = new InputOutputHandler();
 		ChatbotConfigurator cc = new ChatbotConfigurator();
 		RasaConfigurator rc = new RasaConfigurator();
-
-		sc.swaggerChecker(bs);
-
-		String inputOutputConfig = gson.toJson(ioc.inputOutputHandler(bs));
-		bs.setInputOutputConfig(new JSONObject(inputOutputConfig));
-
-		bs.setNlu(rc.nluConfigurator(bs.getInputOutputConfig()));
-		bs.setDomain(rc.domainConfigurator(bs.getInputOutputConfig()));
-		bs.setStories(rc.storiesConfigurator(bs.getInputOutputConfig()));
-
-		String chatbotConfigurator = gson.toJson(cc.chatbotConfigurator(bs));
-		bs.setBotenConfig(new JSONObject(chatbotConfigurator));
 		
-		FileWriter fw;
-		try {
-			fw = new FileWriter("nlu.md");
-			fw.write(bs.getNlu());
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			fw = new FileWriter("domain.yml");
-			fw.write(bs.getDomain());
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			fw = new FileWriter("stories.md");
-			fw.write(bs.getStories());
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			fw = new FileWriter("botenConfig.json");
-			fw.write(bs.getBotenConfig().toString(2));
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		MyHttpURLConnection httpConnection = new MyHttpURLConnection();
+		String swagger = httpConnection.connection("https://gn01868184.github.io/jsonExample.github.io/error.json");
+		botenSwagger.setSwagger(new JSONObject(swagger));
+		System.out.println(botenSwagger.getSwagger());
+
+		String chatbotEnabledSwaggerErrors = gson.toJson(sc.swaggerChecker(botenSwagger));
+		System.out.println(sc.swaggerChecker(botenSwagger));
+		botenSwagger.setChatbotEnabledSwaggerErrors(new JSONObject(chatbotEnabledSwaggerErrors));
 		
-		System.out.print(sc.swaggerChecker(bs));
+		
 	}
 }
