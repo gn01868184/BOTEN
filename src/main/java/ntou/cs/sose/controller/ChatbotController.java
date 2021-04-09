@@ -1,7 +1,6 @@
 package ntou.cs.sose.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,10 +28,16 @@ public class ChatbotController {
 		return serviceManager.doInputOutputHandler();
 	}
 
-	@GetMapping(value = "/botenConfig.json", produces = "application/json")
+	@GetMapping(value = "/ChatbotConfigurator", produces = "application/json")
 	@ResponseBody
 	public String chatbotConfigurator() {
 		return serviceManager.doChatbotConfigurator();
+	}
+
+	@GetMapping(value = "/botenConfig.json", produces = "application/json")
+	@ResponseBody
+	public String showBotenConfig() {
+		return serviceManager.showBotenConfig();
 	}
 
 	@GetMapping(value = "/nlu.md", produces = "application/json")

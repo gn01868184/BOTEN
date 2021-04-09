@@ -107,7 +107,7 @@ public class ChatbotConfigurator {
 		ArrayList path = (ArrayList) flowObj.get(flowName);
 		for (int i = 0; i < path.size(); i++) {
 			HashMap<String, Object> flow = new HashMap<String, Object>();
-			flow.put("intent",BotenSwagger.changeSign((String) path.get(i)));
+			flow.put("intent", BotenSwagger.changeSign((String) path.get(i)));
 			try {
 				ArrayList responseToSlots = JsonPath.read(swagger.toString(), "$.paths." + path.get(i)
 						+ ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].responseToSlots");

@@ -98,7 +98,7 @@ public class InputOutputHandler {
 		try {
 			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
 					.get("useEndpoint");
-			for(int i=0;i<template.length();i++) {
+			for (int i = 0; i < template.length(); i++) {
 				train.add(captureTemplate(flow, template.getString(i)));
 			}
 		} catch (JSONException e) {
@@ -114,7 +114,7 @@ public class InputOutputHandler {
 		try {
 			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
 					.get("parameterList");
-			for(int i=0;i<template.length();i++) {
+			for (int i = 0; i < template.length(); i++) {
 				train.add(captureTemplate(flow, template.getString(i)));
 			}
 		} catch (JSONException e) {
@@ -130,7 +130,7 @@ public class InputOutputHandler {
 		try {
 			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
 					.get("fillParameter");
-			for(int i=0;i<template.length();i++) {
+			for (int i = 0; i < template.length(); i++) {
 				train.add(captureTemplate(flow, template.getString(i)));
 			}
 		} catch (JSONException e) {

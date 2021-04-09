@@ -1,5 +1,8 @@
 package ntou.cs.sose.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -9,7 +12,7 @@ import ntou.cs.sose.model.ChatbotConfigurator;
 import ntou.cs.sose.model.InputOutputHandler;
 import ntou.cs.sose.model.MyHttpURLConnection;
 import ntou.cs.sose.model.RasaConfigurator;
-import ntou.cs.sose.model.SwaggerChecker;
+import ntou.cs.sose.model.rule.Rule;
 
 public class ServiceManager {
 	BotenSwagger botenSwagger = new BotenSwagger();
@@ -17,15 +20,22 @@ public class ServiceManager {
 
 	public String doSwaggerCheck(String swaggerURL) {
 		MyHttpURLConnection httpConnection = new MyHttpURLConnection();
-		String swagger = httpConnection.connection(swaggerURL);
+		botenSwagger.setUrl(swaggerURL);
+		String swagger = httpConnection.connection(botenSwagger.getUrl());
 		botenSwagger.setSwagger(new JSONObject(swagger));
 		System.out.println(botenSwagger.getSwagger());
-
-		SwaggerChecker sc = new SwaggerChecker();
-		String chatbotEnabledSwaggerErrors = gson.toJson(sc.swaggerChecker(botenSwagger));
-
-		botenSwagger.setChatbotEnabledSwaggerErrors(new JSONObject(chatbotEnabledSwaggerErrors));
-		
+		HashMap<String, Object> chatbotEnabledSwaggerErrors = new HashMap<String, Object>();
+		ArrayList message = new ArrayList();
+		for (Rule rule : Rule.values()) {
+			System.out.println(rule);
+			if (!rule.doValidation(botenSwagger).equals(new ArrayList())) {
+				message.addAll(rule.doValidation(botenSwagger));
+				break;
+			}
+		}
+		chatbotEnabledSwaggerErrors.put("chatbot-enabled swagger errors", message);
+		String chatbotEnabledSwaggerErrorsStr = gson.toJson(chatbotEnabledSwaggerErrors);
+		botenSwagger.setChatbotEnabledSwaggerErrors(new JSONObject(chatbotEnabledSwaggerErrorsStr));
 		return botenSwagger.getChatbotEnabledSwaggerErrors().toString(2);
 	}
 
@@ -44,6 +54,10 @@ public class ServiceManager {
 		botenSwagger.setNlu(rc.nluConfigurator(botenSwagger.getInputOutputConfig()));
 		botenSwagger.setDomain(rc.domainConfigurator(botenSwagger.getInputOutputConfig()));
 		botenSwagger.setStories(rc.storiesConfigurator(botenSwagger.getInputOutputConfig()));
+		return "{\"status code\": 200}";
+	}
+
+	public String showBotenConfig() {
 		return botenSwagger.getBotenConfig().toString(2);
 	}
 

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.jayway.jsonpath.JsonPath;
 
 public class BotenSwagger {
+	private String url;
 	private JSONObject swagger;
 	private JSONObject chatbotEnabledSwaggerErrors;
 	private JSONObject inputOutputConfig;
@@ -17,6 +18,14 @@ public class BotenSwagger {
 	private String nlu;
 	private String domain;
 	private String stories;
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
 	public JSONObject getSwagger() {
 		return swagger;
