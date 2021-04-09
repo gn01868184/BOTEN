@@ -2,95 +2,102 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <!-- Bootstrap 4 Icons -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-  <!-- jQuery -->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-  <title>BOTEN</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<!-- Bootstrap 4 Icons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+	<!-- jQuery -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<!-- jsoneditor https://github.com/josdejong/jsoneditor?fbclid=IwAR0ye5mWmwTkJX6yqhkzXvQOkWRR7NjPLK2IP_Nu95gq84efIjFDFEve4t4 -->
+	<link href="/node_modules/jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+	<script src="/node_modules/jsoneditor/dist/jsoneditor.min.js"></script>
+	<title>BOTEN</title>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light  bg-primary">
-    <a class="navbar-brand  text-light" href="./index.html">BOTEN</a>
-  </nav>
+	<nav class="navbar navbar-expand-lg navbar-light  bg-primary">
+		<a class="navbar-brand  text-light" href="./index.html">BOTEN</a>
+	</nav>
+	<form id="swaggerUrlForm">
+		<label for="exampleInputEmail1">Swagger URL</label>
+		<div class="form-row align-items-center">
+			<div class="col-10">
+				<input type="text" class="form-control" placeholder="Enter URL" name="swaggerURL" id="swaggerURL"></input>
+			</div>
+			<div class="col-auto">
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</div>
+	</form>
+	<div id="chatbotEnabledSwaggerErrors" style="width: auto; height: auto;"></div>
+	<div id="rasaConfig" style="width: auto; height: auto;"></div>
+	<div id="rasaConfigButton">
+	</div>
+	<script>
+		$(document).ready(function() {
+			// create the editor
+			var editor;
 
-  <form id="swaggerUrlForm">
-    <label for="exampleInputEmail1">Swagger URL</label>
-    <div class="form-row align-items-center">
-      <div class="col-10">
-        <input type="text" class="form-control" placeholder="Enter URL" name="swaggerURL" id="swaggerURL"></input>
-      </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
-    </div>
-  </form>
-  <pre id="chatbotEnabledSwaggerErrors"></pre>
-  <form id="rasaConfigForm">
-    <div class="form-group" id="rasaConfig"></div>
-  </form>
-  <script>
-    $(document).ready(function() {
-      $("#swaggerUrlForm").submit(function(e) {
-        console.log($(this).serialize());
-        $.ajax({
-          type: "GET",
-          url: './SwaggerCheck',
-          dataType: 'json',
-          data: $(this).serialize(),
-          success: function(data) {
-            console.log(data['chatbot-enabled swagger errors']);
-            if (data['chatbot-enabled swagger errors'].length == 0) {
-              $.ajax({
-                type: "GET",
-                url: './InputOutputHandler',
-                dataType: 'json',
-                success: function(rasaData) {
-                  $('#rasaConfig').append(
-                    '<label for="exampleFormControlTextarea1">Rasa Config</label>' +
-                    '<textarea class="form-control" id="rasaConfig" rows="10">' +
-                    JSON.stringify(rasaData, undefined, 2) + '</textarea>' +
-                    '<button type="submit" class="btn btn-primary">Submit</button>'
-                  );
-                }
-              });
-            } else {
-              console.log(data);
-              document.getElementById("chatbotEnabledSwaggerErrors").textContent = JSON.stringify(data, undefined, 2);
-            }
-          }
-        });
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-      });
+			$("#swaggerUrlForm").submit(function(e) {
+				document.getElementById('chatbotEnabledSwaggerErrors').innerHTML = "";
+				document.getElementById('rasaConfig').innerHTML = "";
+				document.getElementById('rasaConfigButton').innerHTML = "";
+				console.log($(this).serialize());
+				$.ajax({
+					type: "GET",
+					url: './SwaggerCheck',
+					dataType: 'json',
+					data: $(this).serialize(),
+					success: function(data) {
+						console.log(data['chatbot-enabled swagger errors']);
+						if (data['chatbot-enabled swagger errors'].length == 0) {
+							$.ajax({
+								type: "GET",
+								url: './InputOutputHandler',
+								dataType: 'json',
+								success: function(rasaData) {
+									$('#rasaConfig').append('</br><p">RasaConfig</p>');
+									editor = new JSONEditor(document.getElementById("rasaConfig"), {})
+									editor.set(rasaData)
+									$('#rasaConfig').append('<button id="submitConfig" class="btn btn-primary">Submit</button>');
+								}
+							});
+						} else {
+							console.log(data);
+							$('#chatbotEnabledSwaggerErrors').append('</br><p">chatbot-enabled swagger errors</p>');
+							editor = new JSONEditor(document.getElementById("chatbotEnabledSwaggerErrors"), {mode: 'view'})
+							editor.set(data)
+						}
+					}
+				});
+				e.preventDefault(); // avoid to execute the actual submit of the form.
+			});
 
-      $("#rasaConfigForm").submit(function(e) {
-        $.ajax({
-          type: "GET",
-          url: './botenConfig.json',
-          dataType: 'json',
-          success: function(data) {
-            $('body').append(
-              '<a class="btn btn-primary" href="./botenConfig.json" target="_blank" role="button">botenConfig.json</a>' +
-              '<a class="btn btn-primary" href="./nlu.md" target="_blank" role="button">nlu.md</a>' +
-              '<a class="btn btn-primary" href="./domain.yml" target="_blank" role="button">domain.yml</a>' +
-              '<a class="btn btn-primary" href="./stories.md" target="_blank" role="button">stories.md</a>'
-            );
-          }
-        });
-        e.preventDefault();
-      });
+			$(document).on('click', '#submitConfig', function() {
+				console.log(editor.get())
+				$.ajax({
+					type: "GET",
+					url: './ChatbotConfigurator',
+					dataType: 'json',
+					success: function(data) {
+						$('#rasaConfigButton').append(
+							'<a class="btn btn-primary" href="./botenConfig.json" target="_blank" role="button">botenConfig.json</a>' +
+							'<a class="btn btn-primary" href="./nlu.md" target="_blank" role="button">nlu.md</a>' +
+							'<a class="btn btn-primary" href="./domain.yml" target="_blank" role="button">domain.yml</a>' +
+							'<a class="btn btn-primary" href="./stories.md" target="_blank" role="button">stories.md</a>');
+					}
+				});
+			});
 
-    });
-  </script>
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+		});
+	</script>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </body>
 
 </html>
