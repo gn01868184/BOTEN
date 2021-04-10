@@ -2,6 +2,7 @@ package ntou.cs.sose.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -42,6 +43,12 @@ public class ServiceManager {
 	public String doInputOutputHandler() {
 		InputOutputHandler ioc = new InputOutputHandler();
 		String inputOutputConfig = gson.toJson(ioc.inputOutputHandler(botenSwagger));
+		botenSwagger.setInputOutputConfig(new JSONObject(inputOutputConfig));
+		return botenSwagger.getInputOutputConfig().toString(2);
+	}
+
+	public String reviseInputOutputConfig(String inputOutputConfig) {
+		System.out.println(inputOutputConfig);
 		botenSwagger.setInputOutputConfig(new JSONObject(inputOutputConfig));
 		return botenSwagger.getInputOutputConfig().toString(2);
 	}

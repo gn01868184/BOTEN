@@ -41,6 +41,7 @@
 			// create the editor
 			var editor;
 
+			// submit swagger Url
 			$("#swaggerUrlForm").submit(function(e) {
 				document.getElementById('chatbotEnabledSwaggerErrors').innerHTML = "";
 				document.getElementById('rasaConfig').innerHTML = "";
@@ -52,7 +53,6 @@
 					dataType: 'json',
 					data: $(this).serialize(),
 					success: function(data) {
-						console.log(data['chatbot-enabled swagger errors']);
 						if (data['chatbot-enabled swagger errors'].length == 0) {
 							$.ajax({
 								type: "GET",
@@ -62,13 +62,20 @@
 									$('#rasaConfig').append('</br><p">RasaConfig</p>');
 									editor = new JSONEditor(document.getElementById("rasaConfig"), {})
 									editor.set(rasaData)
-									$('#rasaConfig').append('<button id="submitConfig" class="btn btn-primary">Submit</button>');
+									$('#rasaConfig').append(
+										'<button id="submitConfig" class="btn btn-primary">Submit</button>' +
+										'  <button id="reviseConfig" class="btn btn-warning">Revise</button>'
+									);
 								}
 							});
 						} else {
+							// show chatbot-enabled swagger errors
+							console.log("chatbot-enabled swagger errors:	");
 							console.log(data);
 							$('#chatbotEnabledSwaggerErrors').append('</br><p">chatbot-enabled swagger errors</p>');
-							editor = new JSONEditor(document.getElementById("chatbotEnabledSwaggerErrors"), {mode: 'view'})
+							editor = new JSONEditor(document.getElementById("chatbotEnabledSwaggerErrors"), {
+								mode: 'view'
+							})
 							editor.set(data)
 						}
 					}
@@ -76,8 +83,8 @@
 				e.preventDefault(); // avoid to execute the actual submit of the form.
 			});
 
+			// submit the Rasa configuration
 			$(document).on('click', '#submitConfig', function() {
-				console.log(editor.get())
 				$.ajax({
 					type: "GET",
 					url: './ChatbotConfigurator',
@@ -88,10 +95,28 @@
 							'<a class="btn btn-primary" href="./nlu.md" target="_blank" role="button">nlu.md</a>' +
 							'<a class="btn btn-primary" href="./domain.yml" target="_blank" role="button">domain.yml</a>' +
 							'<a class="btn btn-primary" href="./stories.md" target="_blank" role="button">stories.md</a>');
+					},
+					error: function() {
+						alert('Rasa configuration error');
 					}
 				});
 			});
 
+			// revise the Rasa configuration
+			$(document).on('click', '#reviseConfig', function() {
+				console.log("rasaConfig: ");
+				console.log(editor.get());
+				$.ajax({
+					type: "POST",
+					url: './ReviseInputOutputConfig',
+					contentType: "application/json; charset=utf-8",
+					dataType: 'json',
+					data: JSON.stringify(editor.get()),
+					success: function(data) {
+						alert('Success');
+					}
+				});
+			});
 		});
 	</script>
 	<!-- Optional JavaScript -->
