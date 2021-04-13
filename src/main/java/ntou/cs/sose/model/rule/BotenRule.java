@@ -14,7 +14,7 @@ public interface BotenRule {
 	public static Boolean checkParameterName(JSONObject swagger, String path, String params) {
 		Boolean checkPar = false;
 		try {
-			ArrayList parArr = JsonPath.read(swagger.toString(), "$.paths." + path + "..parameters..name");
+			ArrayList parArr = JsonPath.read(swagger.toString(), "$.paths.['" + path + "']..parameters..name");
 			for (int i = 0; i < parArr.size(); i++) {
 				if (parArr.get(i).equals(params)) {
 					return true;
@@ -42,7 +42,7 @@ public interface BotenRule {
 
 	public static ArrayList getRequireParameter(JSONObject swagger, String path) {
 		try {
-			ArrayList parArr = JsonPath.read(swagger.toString(), "$.paths." + path + "..[?(@.required==true)].name");
+			ArrayList parArr = JsonPath.read(swagger.toString(), "$.paths.['" + path + "']..[?(@.required==true)].name");
 			return parArr;
 		} catch (ClassCastException e) {
 			System.out.println(e.getMessage());

@@ -77,7 +77,7 @@ public class ChatbotConfigurator {
 				.get(pathName)).get("get")).get("parameters");
 		try {
 			utterParameterName = JsonPath.read(swagger.toString(),
-					"$.paths." + pathName + ".get.x-bot-utter[*].parameterName");
+					"$.paths.['" + pathName + "'].get.x-bot-utter[*].parameterName");
 		} catch (ClassCastException e) {
 			System.out.println(e.getMessage());
 		} catch (PathNotFoundException e) {
@@ -109,10 +109,10 @@ public class ChatbotConfigurator {
 			HashMap<String, Object> flow = new HashMap<String, Object>();
 			flow.put("intent", BotenSwagger.changeSign((String) path.get(i)));
 			try {
-				ArrayList responseToSlots = JsonPath.read(swagger.toString(), "$.paths." + path.get(i)
-						+ ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].responseToSlots");
+				ArrayList responseToSlots = JsonPath.read(swagger.toString(), "$.paths.['" + path.get(i)
+						+ "'].get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].responseToSlots");
 				ArrayList getSlots = JsonPath.read(swagger.toString(),
-						"$.paths." + path.get(i) + ".get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
+						"$.paths.['" + path.get(i) + "'].get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
 				if (!responseToSlots.equals(new ArrayList())) {
 					ArrayList responseToSlotsArr = new ArrayList();
 					for (int j = 0; j < responseToSlots.size(); j++) {

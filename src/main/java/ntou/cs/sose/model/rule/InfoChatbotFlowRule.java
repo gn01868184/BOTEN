@@ -24,7 +24,7 @@ public class InfoChatbotFlowRule implements BotenRule {
 				ArrayList pathsArr = (ArrayList) chatbotFlow.get(flowName);
 				for (int i = 0; i < pathsArr.size(); i++) {
 					try {
-						JsonPath.read(swagger.toString(), "$.paths." + pathsArr.get(i));
+						JsonPath.read(swagger.toString(), "$.paths.['" + pathsArr.get(i) + "']");
 					} catch (PathNotFoundException e) {
 						System.out.println(e.getMessage());
 						chatbotEnabledSwaggerErrors.add("#/info/x-chatbotFlow/flow: The path of [" + pathsArr.get(i)
