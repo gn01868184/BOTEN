@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 import com.jayway.jsonpath.JsonPath;
 
+import ntou.cs.sose.model.MyHttpURLConnection;
+
 public class BotenSwagger {
 	private String url;
 	private JSONObject swagger;
@@ -18,6 +20,12 @@ public class BotenSwagger {
 	private String nlu;
 	private String domain;
 	private String stories;
+
+	public BotenSwagger(String url) {
+		this.url = url;
+		MyHttpURLConnection httpConnection = new MyHttpURLConnection();
+		swagger = new JSONObject(httpConnection.connection(url));
+	}
 
 	public String getUrl() {
 		return url;
@@ -83,10 +91,10 @@ public class BotenSwagger {
 		this.stories = stories;
 	}
 
-	public ArrayList allPath() {
+	public ArrayList<String> allPath() {
 		org.json.JSONObject paths = swagger.getJSONObject("paths");
 		Iterator<String> keys = paths.keys();
-		ArrayList pathsArr = new ArrayList();
+		ArrayList<String> pathsArr = new ArrayList<String>();
 		while (keys.hasNext()) {
 			String key = keys.next();
 			pathsArr.add(key);
@@ -94,8 +102,8 @@ public class BotenSwagger {
 		return pathsArr;
 	}
 
-	public ArrayList allFlow() {
-		ArrayList flowArr = new ArrayList();
+	public ArrayList<String> allFlow() {
+		ArrayList<String> flowArr = new ArrayList<String>();
 		try {
 			flowArr = JsonPath.read(swagger.toString(), "$.info..x-chatbotFlow..flowName");
 		} catch (ClassCastException e) {
@@ -111,7 +119,7 @@ public class BotenSwagger {
 		try {
 			org.json.JSONArray chatbotFlow = info.getJSONArray("x-chatbotFlow");
 			for (int i = 0; i < chatbotFlow.length(); i++) {
-				ArrayList pathsArr = new ArrayList();
+				ArrayList<String> pathsArr = new ArrayList<String>();
 				org.json.JSONArray flowArray = chatbotFlow.getJSONObject(i).getJSONArray("flow");
 				String flowName = chatbotFlow.getJSONObject(i).getString("flowName");
 				for (int j = 0; j < flowArray.length(); j++) {
@@ -128,7 +136,6 @@ public class BotenSwagger {
 
 	public static String changeSign(String pathName) {
 		// change / to _
-		ArrayList pathArr = new ArrayList();
 		String changedPath = "";
 		for (String retval : pathName.split("/")) {
 			if (!retval.equals("")) {
@@ -137,5 +144,16 @@ public class BotenSwagger {
 		}
 		changedPath = changedPath.substring(0, changedPath.length() - 1);
 		return changedPath;
+	}
+
+	public ArrayList<Object> getRequireParameters(String path) {
+		try {
+			ArrayList<Object> parArr = JsonPath.read(swagger.toString(),
+					"$.paths.['" + path + "']..[?(@.required==true)].name");
+			return parArr;
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
 	}
 }
