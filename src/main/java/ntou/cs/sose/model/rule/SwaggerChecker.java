@@ -7,8 +7,8 @@ import ntou.cs.sose.entity.BotenSwagger;
 public class SwaggerChecker {
 	private BotenRule botenRule;
 
-	public ArrayList execute(BotenSwagger botenSwagger) {
-		return botenRule.checkRule(botenSwagger);
+	public ArrayList<String> execute(BotenSwagger botenSwagger) {
+		return botenRule.checkRules(botenSwagger);
 	}
 
 	public void setBotenRule(BotenRule botenRule) {

@@ -16,9 +16,9 @@ public class JsonSchemaValidator implements BotenRule {
 	private final Schema schema = SchemaLoader.load(jsonSchema);
 
 	@Override
-	public ArrayList checkRule(BotenSwagger botenSwagger) {
+	public ArrayList<String> checkRules(BotenSwagger botenSwagger) {
 		JSONObject swagger = botenSwagger.getSwagger();
-		ArrayList chatbotEnabledSwaggerErrors = new ArrayList();
+		ArrayList<String> chatbotEnabledSwaggerErrors = new ArrayList<String>();
 		try {
 			schema.validate(swagger);
 			System.out.println("jsonSchema Success");

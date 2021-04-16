@@ -1,7 +1,6 @@
 package ntou.cs.sose.model.rule;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,11 +11,10 @@ import ntou.cs.sose.entity.BotenSwagger;
 
 public class UtterAndEntityCorrespondRule implements BotenRule {
 	@Override
-	public ArrayList checkRule(BotenSwagger botenSwagger) {
+	public ArrayList<String> checkRules(BotenSwagger botenSwagger) {
 		JSONObject swagger = botenSwagger.getSwagger();
-		ArrayList chatbotEnabledSwaggerErrors = new ArrayList();
-		ArrayList allPath = botenSwagger.allPath();
-		HashMap<String, Object> chatbotFlow = botenSwagger.chatbotFlow();
+		ArrayList<String> chatbotEnabledSwaggerErrors = new ArrayList<String>();
+		ArrayList<String> allPath = botenSwagger.allPath();
 		JSONObject paths = swagger.getJSONObject("paths");
 		for (int i = 0; i < allPath.size(); i++) {
 			String path = (String) allPath.get(i);
@@ -27,8 +25,8 @@ public class UtterAndEntityCorrespondRule implements BotenRule {
 				try {
 					org.json.JSONArray botUtter = getObj.getJSONArray("x-bot-utter");
 					org.json.JSONArray userEntity = getObj.getJSONArray("x-user-entity");
-					ArrayList botParArr = JsonPath.read(botUtter.toString(), "$..parameterName");
-					ArrayList userParArr = JsonPath.read(userEntity.toString(), "$..parameterName");
+					ArrayList<String> botParArr = JsonPath.read(botUtter.toString(), "$..parameterName");
+					ArrayList<String> userParArr = JsonPath.read(userEntity.toString(), "$..parameterName");
 					// Check if the parameter x-user-entity filled in by x-bot-utter is filled in
 					for (int j = 0; j < botParArr.size(); j++) {
 						String botParameter = (String) botParArr.get(j);

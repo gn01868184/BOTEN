@@ -15,8 +15,8 @@ import ntou.cs.sose.entity.BotenSwagger;
 
 public class InputOutputHandler {
 	private JSONObject swagger;
-	private ArrayList allPath;
-	private ArrayList allFlow;
+	private ArrayList<String> allPath;
+	private ArrayList<String> allFlow;
 
 	public HashMap<String, Object> inputOutputHandler(BotenSwagger req) {
 		HashMap<String, Object> res = new HashMap<String, Object>();
@@ -43,11 +43,11 @@ public class InputOutputHandler {
 
 	public HashMap<String, Object> setDomain() {
 		HashMap<String, Object> domain = new HashMap<String, Object>();
-		ArrayList intents = setIntents();
-		ArrayList entities = setEntities();
+		ArrayList<String> intents = setIntents();
+		ArrayList<String> entities = setEntities();
 		HashMap<String, Object> slots = setSlots();
-		ArrayList actions = setActions();
-		ArrayList forms = setForms();
+		ArrayList<String> actions = setActions();
+		ArrayList<String> forms = setForms();
 		HashMap<String, String> utter = setUtter();
 		domain.put("intents", intents);
 		domain.put("entities", entities);
@@ -59,7 +59,7 @@ public class InputOutputHandler {
 	}
 
 	public HashMap<String, Object> setStories() {
-		ArrayList flow = setFlow();
+		ArrayList<String> flow = setFlow();
 		HashMap<String, Object> stories = new HashMap<String, Object>();
 		for (int i = 0; i < flow.size(); i++) {
 			stories.put("into " + flow.get(i) + "_form path", setIntoPath((String) flow.get(i)));
@@ -69,8 +69,8 @@ public class InputOutputHandler {
 		return stories;
 	}
 
-	public ArrayList getAllParameter() {
-		ArrayList parArr = new ArrayList();
+	public ArrayList<String> getAllParameter() {
+		ArrayList<String> parArr = new ArrayList<String>();
 		try {
 			parArr = JsonPath.read(swagger.toString(), "$.paths..x-user-entity");
 		} catch (ClassCastException e) {
@@ -81,8 +81,8 @@ public class InputOutputHandler {
 
 	public HashMap<String, Object> setIntent() {
 		HashMap<String, Object> intent = new HashMap<String, Object>();
-		ArrayList flow = setFlow();
-		ArrayList inform = setInformIntent();
+		ArrayList<String> flow = setFlow();
+		ArrayList<String> inform = setInformIntent();
 		for (int i = 0; i < flow.size(); i++) {
 			intent.put("get_" + (String) flow.get(i), setGetIntent((String) flow.get(i)));
 			intent.put("parameters_list_" + (String) flow.get(i), setParametersListIntent((String) flow.get(i)));
@@ -93,8 +93,8 @@ public class InputOutputHandler {
 		return intent;
 	}
 
-	public ArrayList setGetIntent(String flow) {
-		ArrayList train = new ArrayList();
+	public ArrayList<String> setGetIntent(String flow) {
+		ArrayList<String> train = new ArrayList<String>();
 		try {
 			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
 					.get("useEndpoint");
@@ -109,8 +109,8 @@ public class InputOutputHandler {
 		return train;
 	}
 
-	public ArrayList setParametersListIntent(String flow) {
-		ArrayList train = new ArrayList();
+	public ArrayList<String> setParametersListIntent(String flow) {
+		ArrayList<String> train = new ArrayList<String>();
 		try {
 			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
 					.get("parameterList");
@@ -125,8 +125,8 @@ public class InputOutputHandler {
 		return train;
 	}
 
-	public ArrayList setFillParameters(String flow) {
-		ArrayList train = new ArrayList();
+	public ArrayList<String> setFillParameters(String flow) {
+		ArrayList<String> train = new ArrayList<String>();
 		try {
 			JSONArray template = (JSONArray) ((JSONObject) ((JSONObject) swagger.get("info")).get("x-input-template"))
 					.get("fillParameter");
@@ -158,20 +158,20 @@ public class InputOutputHandler {
 		return captureTemplate;
 	}
 
-	public ArrayList setInformIntent() {
-		ArrayList allParameter = getAllParameter();
-		ArrayList inform = new ArrayList();
-		ArrayList parameterArr = new ArrayList();
-		ArrayList notRepeatParma = new ArrayList();
-		ArrayList entityValue = new ArrayList();
-		ArrayList entityValueArr = new ArrayList();
+	public ArrayList<String> setInformIntent() {
+		ArrayList<String> allParameter = getAllParameter();
+		ArrayList<String> inform = new ArrayList<String>();
+		ArrayList<String> parameterArr = new ArrayList<String>();
+		ArrayList<String> notRepeatParma = new ArrayList<String>();
+		ArrayList<Object> entityValue = new ArrayList<Object>();
+		ArrayList<Object> entityValueArr = new ArrayList<Object>();
 		try {
 			parameterArr = JsonPath.read(allParameter.toString(), "$..parameterName");
-			notRepeatParma = (ArrayList) parameterArr.stream().distinct().collect(Collectors.toList());
+			notRepeatParma = (ArrayList<String>) parameterArr.stream().distinct().collect(Collectors.toList());
 			for (int i = 0; i < notRepeatParma.size(); i++) {
 				entityValue = JsonPath.read(allParameter.toString(),
 						"$..[?(@.parameterName==\"" + notRepeatParma.get(i) + "\")].entityValue");
-				entityValueArr = (ArrayList) entityValue.get(0);
+				entityValueArr = (ArrayList<Object>) entityValue.get(0);
 				for (int j = 0; j < entityValueArr.size(); j++) {
 					inform.add("[" + entityValueArr.get(j) + "](" + notRepeatParma.get(i) + ")");
 				}
@@ -183,19 +183,19 @@ public class InputOutputHandler {
 	}
 
 	public HashMap<String, Object> setRegex() {
-		ArrayList allParameter = getAllParameter();
-		ArrayList allRegexArr = new ArrayList();
-		ArrayList parameterArr = new ArrayList();
-		ArrayList notRepeatParma = new ArrayList();
+		ArrayList<String> allParameter = getAllParameter();
+		ArrayList<Object> allRegexArr = new ArrayList<Object>();
+		ArrayList<Object> parameterArr = new ArrayList<Object>();
+		ArrayList<Object> notRepeatParma = new ArrayList<Object>();
 		HashMap<String, Object> regexObj = new HashMap<String, Object>();
 		try {
 			allRegexArr = JsonPath.read(allParameter.toString(), "$..[?(@.regex)]");
 			parameterArr = JsonPath.read(allRegexArr.toString(), "$..parameterName");
-			notRepeatParma = (ArrayList) parameterArr.stream().distinct().collect(Collectors.toList());
+			notRepeatParma = (ArrayList<Object>) parameterArr.stream().distinct().collect(Collectors.toList());
 			for (int i = 0; i < notRepeatParma.size(); i++) {
-				ArrayList regexTwoDimensionalArray = JsonPath.read(allRegexArr.toString(),
+				ArrayList<Object> regexTwoDimensionalArray = JsonPath.read(allRegexArr.toString(),
 						"$.[?(@.parameterName==\"" + notRepeatParma.get(i) + "\")].regex");
-				ArrayList regexArr = new ArrayList();
+				ArrayList<Object> regexArr = new ArrayList<Object>();
 				for (int j = 0; j < regexTwoDimensionalArray.size(); j++) {
 					regexArr.addAll((Collection) regexTwoDimensionalArray.get(j));
 				}
@@ -207,8 +207,8 @@ public class InputOutputHandler {
 		return regexObj;
 	}
 
-	public ArrayList setFlow() {
-		ArrayList flow = new ArrayList();
+	public ArrayList<String> setFlow() {
+		ArrayList<String> flow = new ArrayList<String>();
 		// change / to _
 		for (int i = 0; i < allPath.size(); i++) {
 			flow.add(BotenSwagger.changeSign((String) allPath.get(i)));
@@ -217,9 +217,9 @@ public class InputOutputHandler {
 		return flow;
 	}
 
-	public ArrayList setIntents() {
-		ArrayList flow = setFlow();
-		ArrayList intents = new ArrayList();
+	public ArrayList<String> setIntents() {
+		ArrayList<String> flow = setFlow();
+		ArrayList<String> intents = new ArrayList<String>();
 		for (int i = 0; i < flow.size(); i++) {
 			intents.add("get_" + flow.get(i));
 			intents.add("parameters_list_" + flow.get(i));
@@ -228,13 +228,13 @@ public class InputOutputHandler {
 		return intents;
 	}
 
-	public ArrayList setEntities() {
-		ArrayList allParameter = getAllParameter();
-		ArrayList parameterArr = new ArrayList();
-		ArrayList notRepeatParma = new ArrayList();
+	public ArrayList<String> setEntities() {
+		ArrayList<String> allParameter = getAllParameter();
+		ArrayList<String> parameterArr = new ArrayList<String>();
+		ArrayList<String> notRepeatParma = new ArrayList<String>();
 		try {
 			parameterArr = JsonPath.read(allParameter.toString(), "$..parameterName");
-			notRepeatParma = (ArrayList) parameterArr.stream().distinct().collect(Collectors.toList());
+			notRepeatParma = (ArrayList<String>) parameterArr.stream().distinct().collect(Collectors.toList());
 		} catch (ClassCastException e) {
 			System.out.println(e.getMessage());
 		}
@@ -242,7 +242,7 @@ public class InputOutputHandler {
 	}
 
 	public HashMap<String, Object> setSlots() {
-		ArrayList entities = (ArrayList) setEntities();
+		ArrayList<String> entities = setEntities();
 		HashMap<String, Object> slots = new HashMap<String, Object>();
 		HashMap<String, String> type = new HashMap<String, String>();
 		type.put("type", "unfeaturized");
@@ -252,9 +252,9 @@ public class InputOutputHandler {
 		return slots;
 	}
 
-	public ArrayList setActions() {
-		ArrayList entities = setEntities();
-		ArrayList actions = new ArrayList();
+	public ArrayList<String> setActions() {
+		ArrayList<String> entities = setEntities();
+		ArrayList<String> actions = new ArrayList<String>();
 		for (int i = 0; i < entities.size(); i++) {
 			actions.add("utter_ask_" + entities.get(i));
 		}
@@ -263,18 +263,18 @@ public class InputOutputHandler {
 		return actions;
 	}
 
-	public ArrayList setForms() {
-		ArrayList forms = new ArrayList();
+	public ArrayList<String> setForms() {
+		ArrayList<String> forms = new ArrayList<String>();
 		forms.add("parameters_form");
 		return forms;
 	}
 
 	public HashMap<String, String> setUtter() {
-		ArrayList entities = setEntities();
+		ArrayList<String> entities = setEntities();
 		HashMap<String, String> utter = new HashMap<String, String>();
 		for (int i = 0; i < entities.size(); i++) {
 			try {
-				ArrayList JsonPathArr = JsonPath.read(swagger.toString(),
+				ArrayList<String> JsonPathArr = JsonPath.read(swagger.toString(),
 						"$..x-bot-utter[?(@.parameterName==\"" + entities.get(i) + "\")].utter");
 				utter.put("utter_ask_" + entities.get(i), (String) JsonPathArr.get(0));
 			} catch (ClassCastException e) {
@@ -285,7 +285,7 @@ public class InputOutputHandler {
 	}
 
 	public HashMap<String, Object> setIntoPath(String flow) {
-		ArrayList actions = new ArrayList();
+		ArrayList<String> actions = new ArrayList<String>();
 		HashMap<String, Object> intoPath = new HashMap<String, Object>();
 		actions.add("parameters_form");
 		actions.add("form{\"name\": \"parameters_form\"}");
@@ -295,7 +295,7 @@ public class InputOutputHandler {
 	}
 
 	public HashMap<String, Object> setParametersList(String flow) {
-		ArrayList actions = new ArrayList();
+		ArrayList<String> actions = new ArrayList<String>();
 		HashMap<String, Object> parametersListPath = new HashMap<String, Object>();
 		actions.add("action_slots_values");
 		parametersListPath.put("parameters_list_" + flow, actions);
@@ -303,7 +303,7 @@ public class InputOutputHandler {
 	}
 
 	public HashMap<String, Object> setUsePath(String flow) {
-		ArrayList actions = new ArrayList();
+		ArrayList<String> actions = new ArrayList<String>();
 		HashMap<String, Object> usePath = new HashMap<String, Object>();
 		actions.add("action_use_api");
 		usePath.put("get_" + flow, actions);

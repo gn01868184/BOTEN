@@ -12,16 +12,16 @@ import ntou.cs.sose.entity.BotenSwagger;
 
 public class InfoChatbotFlowRule implements BotenRule {
 	@Override
-	public ArrayList checkRule(BotenSwagger botenSwagger) {
+	public ArrayList<String> checkRules(BotenSwagger botenSwagger) {
 		JSONObject swagger = botenSwagger.getSwagger();
 		HashMap<String, Object> chatbotFlow = botenSwagger.chatbotFlow();
-		ArrayList chatbotEnabledSwaggerErrors = new ArrayList();
+		ArrayList<String> chatbotEnabledSwaggerErrors = new ArrayList<String>();
 
 		// 檢查info-x-chatbotFlow與Swagger內的path是否對應
 		JSONObject info = swagger.getJSONObject("info");
 		if (info.has("x-chatbotFlow")) {
 			for (Object flowName : chatbotFlow.keySet()) {
-				ArrayList pathsArr = (ArrayList) chatbotFlow.get(flowName);
+				ArrayList<String> pathsArr = (ArrayList<String>) chatbotFlow.get(flowName);
 				for (int i = 0; i < pathsArr.size(); i++) {
 					try {
 						JsonPath.read(swagger.toString(), "$.paths.['" + pathsArr.get(i) + "']");

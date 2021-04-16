@@ -18,9 +18,9 @@ import ntou.cs.sose.entity.BotenSwagger;
 
 public class SwaggerValidator implements BotenRule {
 	@Override
-	public ArrayList checkRule(BotenSwagger botenSwagger) {
+	public ArrayList<String> checkRules(BotenSwagger botenSwagger) {
 		String swaggerUrl = botenSwagger.getUrl();
-		ArrayList chatbotEnabledSwaggerErrors = new ArrayList();
+		ArrayList<String> chatbotEnabledSwaggerErrors = new ArrayList<String>();
 
 		try {
 			StringBuilder stringBuilder = new StringBuilder("https://validator.swagger.io/validator/debug");
@@ -38,10 +38,10 @@ public class SwaggerValidator implements BotenRule {
 				try {
 					JsonArray messages = convertedObject.get("schemaValidationMessages").getAsJsonArray();
 					for (int i = 0; i < messages.size(); i++) {
-						chatbotEnabledSwaggerErrors.add(((JsonObject) messages.get(i)).get("message"));
+						chatbotEnabledSwaggerErrors.add(((JsonObject) messages.get(i)).get("message").toString());
 					}
 				} catch (NullPointerException e) {
-					System.out.print(e.getMessage());
+					System.out.println("SwaggerValidator:" + e.getMessage());
 				}
 			} else {
 				chatbotEnabledSwaggerErrors.add("Response error: " + con.getResponseCode());

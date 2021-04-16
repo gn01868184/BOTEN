@@ -18,8 +18,8 @@ import ntou.cs.sose.entity.BotenSwagger;
 public class ChatbotConfigurator {
 	private JSONObject swagger;
 	private HashMap<String, Object> config;
-	private ArrayList allPath;
-	private ArrayList allFlow;
+	private ArrayList<String> allPath;
+	private ArrayList<String> allFlow;
 	private HashMap<String, Object> chatbotFlow;
 
 	public HashMap<String, Object> chatbotConfigurator(BotenSwagger req) {
@@ -70,9 +70,9 @@ public class ChatbotConfigurator {
 		return pathObj;
 	}
 
-	public ArrayList getParameters(String pathName) {
-		ArrayList pathObj = new ArrayList();
-		ArrayList utterParameterName = new ArrayList();
+	public ArrayList<HashMap<String, Object>> getParameters(String pathName) {
+		ArrayList<HashMap<String, Object>> pathObj = new ArrayList<HashMap<String, Object>>();
+		ArrayList<String> utterParameterName = new ArrayList<String>();
 		JSONArray parameters = (JSONArray) ((JSONObject) ((JSONObject) ((JSONObject) swagger.get("paths"))
 				.get(pathName)).get("get")).get("parameters");
 		try {
@@ -102,26 +102,26 @@ public class ChatbotConfigurator {
 		return flowParameters;
 	}
 
-	public ArrayList getResponseToSlotsGetSlots(HashMap<String, Object> flowObj, String flowName) {
-		ArrayList allFlow = new ArrayList();
-		ArrayList path = (ArrayList) flowObj.get(flowName);
+	public ArrayList<HashMap<String, Object>> getResponseToSlotsGetSlots(HashMap<String, Object> flowObj, String flowName) {
+		ArrayList<HashMap<String, Object>> allFlow = new ArrayList<HashMap<String, Object>>();
+		ArrayList<String> path =  (ArrayList<String>) flowObj.get(flowName);
 		for (int i = 0; i < path.size(); i++) {
 			HashMap<String, Object> flow = new HashMap<String, Object>();
 			flow.put("intent", BotenSwagger.changeSign((String) path.get(i)));
 			try {
-				ArrayList responseToSlots = JsonPath.read(swagger.toString(), "$.paths.['" + path.get(i)
+				ArrayList<Collection> responseToSlots = JsonPath.read(swagger.toString(), "$.paths.['" + path.get(i)
 						+ "'].get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].responseToSlots");
-				ArrayList getSlots = JsonPath.read(swagger.toString(),
+				ArrayList<Collection> getSlots = JsonPath.read(swagger.toString(),
 						"$.paths.['" + path.get(i) + "'].get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
-				if (!responseToSlots.equals(new ArrayList())) {
-					ArrayList responseToSlotsArr = new ArrayList();
+				if (!responseToSlots.equals(new ArrayList<Collection>())) {
+					ArrayList<String> responseToSlotsArr = new ArrayList();
 					for (int j = 0; j < responseToSlots.size(); j++) {
 						responseToSlotsArr.addAll((Collection) responseToSlots.get(j));
 					}
 					flow.put("responseToSlots", responseToSlotsArr);
 				}
-				if (!getSlots.equals(new ArrayList())) {
-					ArrayList getSlotsArr = new ArrayList();
+				if (!getSlots.equals(new ArrayList<String>())) {
+					ArrayList<Collection> getSlotsArr = new ArrayList<Collection>();
 					for (int j = 0; j < getSlots.size(); j++) {
 						getSlotsArr.addAll((Collection) getSlots.get(j));
 					}
@@ -135,11 +135,11 @@ public class ChatbotConfigurator {
 		return allFlow;
 	}
 
-	public ArrayList removeRepeatParameters(HashMap<String, Object> flowObj, String flowName) {
-		ArrayList path = (ArrayList) flowObj.get(flowName);
-		ArrayList allParameters = new ArrayList();
+	public ArrayList<HashMap<String, Object>> removeRepeatParameters(HashMap<String, Object> flowObj, String flowName) {
+		ArrayList<String> path = (ArrayList<String>) flowObj.get(flowName);
+		ArrayList<HashMap<String, Object>> allParameters = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < path.size(); i++) {
-			ArrayList Parameters = getParameters((String) path.get(i));
+			ArrayList<HashMap<String, Object>> Parameters = getParameters((String) path.get(i));
 			for (int j = 0; j < Parameters.size(); j++) {
 				if (!allParameters.contains(Parameters.get(j))) {
 					allParameters.add(Parameters.get(j));
