@@ -10,12 +10,12 @@ import com.jayway.jsonpath.JsonPath;
 
 import ntou.cs.sose.entity.BotenSwagger;
 
-public class PathsChatbotFlowRule implements BotenRule {
+public class PathsChatbotFlowRule implements ParameterNameRule {
 	@Override
-	public ArrayList checkRule(BotenSwagger botenSwagger) {
+	public ArrayList<String> checkRules(BotenSwagger botenSwagger) {
 		JSONObject swagger = botenSwagger.getSwagger();
-		ArrayList chatbotEnabledSwaggerErrors = new ArrayList();
-		ArrayList allPath = botenSwagger.allPath();
+		ArrayList<String> chatbotEnabledSwaggerErrors = new ArrayList<String>();
+		ArrayList<String> allPath = botenSwagger.allPath();
 		HashMap<String, Object> chatbotFlow = botenSwagger.chatbotFlow();
 		JSONObject paths = swagger.getJSONObject("paths");
 		for (int i = 0; i < allPath.size(); i++) {
@@ -33,7 +33,7 @@ public class PathsChatbotFlowRule implements BotenRule {
 						// Check the correspondence between chatbotFlow and paths of info
 						for (Object flowName : chatbotFlow.keySet()) {
 							if (flowObj.getString("flowName").equals(flowName)) {
-								ArrayList flowPathsArr = (ArrayList) chatbotFlow.get(flowName);
+								ArrayList<String> flowPathsArr = (ArrayList<String>) chatbotFlow.get(flowName);
 								for (int z = 0; z < flowPathsArr.size(); z++) {
 									if (flowPathsArr.get(z).equals(path)) {
 										checkPath = true;
@@ -54,18 +54,18 @@ public class PathsChatbotFlowRule implements BotenRule {
 						}
 						// Check getSlots_parameterName
 						try {
-							ArrayList flowName = JsonPath.read(flowObj.toString(), "$..[?(@.getSlots)].flowName");
-							ArrayList resParameterName = JsonPath.read(flowObj.toString(),
+							ArrayList<String> flowName = JsonPath.read(flowObj.toString(), "$..[?(@.getSlots)].flowName");
+							ArrayList<String> resParameterName = JsonPath.read(flowObj.toString(),
 									"$..[?(@.getSlots)]..parameterName");
 							if (!resParameterName.isEmpty()) {
 								for (int k = 0; k < resParameterName.size(); k++) {
 									String par = (String) resParameterName.get(k);
-									if (!BotenRule.checkParameterName(swagger, path, par)) {
+									if (!checkParameterNames(swagger, path, par)) {
 										chatbotEnabledSwaggerErrors.add("#/paths/" + path
 												+ "/x-chatbotFlow/getSlots/parameterName: The parameter of [" + par
 												+ "] not found in Swagger");
 									}
-									if (!BotenRule.checkFlowParameterName(swagger, (String) flowName.get(0), par)) {
+									if (!checkFlowParameterNames(swagger, (String) flowName.get(0), par)) {
 										chatbotEnabledSwaggerErrors.add("#/paths/" + path
 												+ "/x-chatbotFlow/getSlots/parameterName: The parameter of [" + par
 												+ "] not found in responseToSlots");
@@ -88,4 +88,16 @@ public class PathsChatbotFlowRule implements BotenRule {
 
 	}
 
+	public boolean checkFlowParameterNames(JSONObject swagger, String flowName, String params) {
+		try {
+			ArrayList<String> parArr = JsonPath.read(swagger.toString(), "$.paths..x-chatbotFlow[?(@.flowName==\"" + flowName
+					+ "\")].responseToSlots[?(@.parameterName==\"" + params + "\")]");
+			if (!parArr.isEmpty()) {
+				return true;
+			}
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
 }
