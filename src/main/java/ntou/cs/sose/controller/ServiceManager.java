@@ -1,8 +1,10 @@
 package ntou.cs.sose.controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Scanner;
 
 import org.json.JSONObject;
 
@@ -11,29 +13,47 @@ import com.google.gson.Gson;
 import ntou.cs.sose.entity.BotenSwagger;
 import ntou.cs.sose.model.ChatbotConfigurator;
 import ntou.cs.sose.model.InputOutputHandler;
-import ntou.cs.sose.model.MyHttpURLConnection;
 import ntou.cs.sose.model.RasaConfigurator;
-import ntou.cs.sose.model.rule.Rule;
+import ntou.cs.sose.model.rule.BotenRule;
+import ntou.cs.sose.model.rule.SwaggerChecker;
 
 public class ServiceManager {
-	BotenSwagger botenSwagger = new BotenSwagger();
+	BotenSwagger botenSwagger;
 	Gson gson = new Gson();
 
 	public String doSwaggerCheck(String swaggerURL) {
-		MyHttpURLConnection httpConnection = new MyHttpURLConnection();
-		botenSwagger.setUrl(swaggerURL);
-		String swagger = httpConnection.connection(botenSwagger.getUrl());
-		botenSwagger.setSwagger(new JSONObject(swagger));
-		System.out.println(botenSwagger.getSwagger());
+		botenSwagger = new BotenSwagger(swaggerURL);
+		SwaggerChecker swaggerChecker = new SwaggerChecker();
 		HashMap<String, Object> chatbotEnabledSwaggerErrors = new HashMap<String, Object>();
-		ArrayList message = new ArrayList();
-		for (Rule rule : Rule.values()) {
-			System.out.println(rule);
-			if (!rule.doValidation(botenSwagger).equals(new ArrayList())) {
-				message.addAll(rule.doValidation(botenSwagger));
-				break;
+		ArrayList<String> message = new ArrayList<String>();
+
+		try (Scanner r = new Scanner(new FileReader("./rule.txt"))) {
+			while (r.hasNext()) {
+				String rule = r.nextLine();
+				try {
+					Class c = Class.forName(rule);
+					BotenRule obj = (BotenRule) c.newInstance();
+					swaggerChecker.setBotenRule(obj);
+					if (!swaggerChecker.execute(botenSwagger).equals(new ArrayList<String>())) {
+						message.addAll(swaggerChecker.execute(botenSwagger));
+						break;
+					}
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+					message.add("InstantiationException: " + e.getMessage());
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+					message.add("IllegalAccessException: " + e.getMessage());
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+					message.add("ClassNotFoundException: " + e.getMessage());
+				}
 			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			message.add("FileNotFoundException: " + e.getMessage());
 		}
+
 		chatbotEnabledSwaggerErrors.put("chatbot-enabled swagger errors", message);
 		String chatbotEnabledSwaggerErrorsStr = gson.toJson(chatbotEnabledSwaggerErrors);
 		botenSwagger.setChatbotEnabledSwaggerErrors(new JSONObject(chatbotEnabledSwaggerErrorsStr));
