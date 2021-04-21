@@ -17,9 +17,9 @@ public class InputOutputHandler {
 	private JSONObject swagger;
 	private ArrayList<String> allPath;
 	private ArrayList<String> allFlow;
+	private HashMap<String, Object> res = new HashMap<String, Object>();
 
-	public HashMap<String, Object> inputOutputHandler(BotenSwagger req) {
-		HashMap<String, Object> res = new HashMap<String, Object>();
+	public InputOutputHandler(BotenSwagger req) {
 		swagger = req.getSwagger();
 		allPath = req.allPath();
 		allFlow = req.allFlow();
@@ -29,6 +29,9 @@ public class InputOutputHandler {
 		res.put("nlu", nlu);
 		res.put("domain", domain);
 		res.put("stories", stories);
+	}
+
+	public HashMap<String, Object> getRes() {
 		return res;
 	}
 
@@ -66,6 +69,7 @@ public class InputOutputHandler {
 			stories.put(flow.get(i) + " parameters list", setParametersList((String) flow.get(i)));
 			stories.put("use " + flow.get(i) + " path", setUsePath((String) flow.get(i)));
 		}
+		stories.put("auto location path", setAutoLocationPath());
 		return stories;
 	}
 
@@ -83,6 +87,7 @@ public class InputOutputHandler {
 		HashMap<String, Object> intent = new HashMap<String, Object>();
 		ArrayList<String> flow = setFlow();
 		ArrayList<String> inform = setInformIntent();
+		ArrayList<String> autoGetLocation = setAutoGetLocation();
 		for (int i = 0; i < flow.size(); i++) {
 			intent.put("get_" + (String) flow.get(i), setGetIntent((String) flow.get(i)));
 			intent.put("parameters_list_" + (String) flow.get(i), setParametersListIntent((String) flow.get(i)));
@@ -90,6 +95,8 @@ public class InputOutputHandler {
 		}
 
 		intent.put("inform", inform);
+		intent.put("auto_get_location", autoGetLocation);
+
 		return intent;
 	}
 
@@ -182,6 +189,14 @@ public class InputOutputHandler {
 		return inform;
 	}
 
+	public ArrayList<String> setAutoGetLocation() {
+		ArrayList<String> train = new ArrayList<String>();
+		train.add(
+				"Latitude of my current location is [25.130486599999998](auto_latitude), longitude of my current location is [121.73195779999999](auto_longitude)");
+		train.add("Longitude is [121.736299](auto_longitude), latitude is [25.129253](auto_latitude)");
+		return train;
+	}
+
 	public HashMap<String, Object> setRegex() {
 		ArrayList<String> allParameter = getAllParameter();
 		ArrayList<Object> allRegexArr = new ArrayList<Object>();
@@ -225,20 +240,23 @@ public class InputOutputHandler {
 			intents.add("parameters_list_" + flow.get(i));
 			intents.add("fill_parameters_" + flow.get(i));
 		}
+		intents.add("inform");
+		intents.add("auto_get_location");
 		return intents;
 	}
 
 	public ArrayList<String> setEntities() {
 		ArrayList<String> allParameter = getAllParameter();
 		ArrayList<String> parameterArr = new ArrayList<String>();
-		ArrayList<String> notRepeatParma = new ArrayList<String>();
 		try {
 			parameterArr = JsonPath.read(allParameter.toString(), "$..parameterName");
-			notRepeatParma = (ArrayList<String>) parameterArr.stream().distinct().collect(Collectors.toList());
+			parameterArr = (ArrayList<String>) parameterArr.stream().distinct().collect(Collectors.toList());
 		} catch (ClassCastException e) {
 			System.out.println(e.getMessage());
 		}
-		return notRepeatParma;
+		parameterArr.add("auto_latitude");
+		parameterArr.add("auto_longitude");
+		return parameterArr;
 	}
 
 	public HashMap<String, Object> setSlots() {
@@ -249,6 +267,8 @@ public class InputOutputHandler {
 		for (int i = 0; i < entities.size(); i++) {
 			slots.put((String) entities.get(i), type);
 		}
+		slots.put("auto_latitude", type);
+		slots.put("auto_longitude", type);
 		return slots;
 	}
 
@@ -260,6 +280,7 @@ public class InputOutputHandler {
 		}
 		actions.add("action_slots_values");
 		actions.add("action_use_api");
+		actions.add("action_auto_location");
 		return actions;
 	}
 
@@ -278,6 +299,8 @@ public class InputOutputHandler {
 						"$..x-bot-utter[?(@.parameterName==\"" + entities.get(i) + "\")].utter");
 				utter.put("utter_ask_" + entities.get(i), (String) JsonPathArr.get(0));
 			} catch (ClassCastException e) {
+				System.out.println(e.getMessage());
+			} catch (IndexOutOfBoundsException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -307,6 +330,14 @@ public class InputOutputHandler {
 		HashMap<String, Object> usePath = new HashMap<String, Object>();
 		actions.add("action_use_api");
 		usePath.put("get_" + flow, actions);
+		return usePath;
+	}
+
+	public HashMap<String, Object> setAutoLocationPath() {
+		ArrayList<String> actions = new ArrayList<String>();
+		HashMap<String, Object> usePath = new HashMap<String, Object>();
+		actions.add("action_auto_location");
+		usePath.put("auto_get_location", actions);
 		return usePath;
 	}
 }
