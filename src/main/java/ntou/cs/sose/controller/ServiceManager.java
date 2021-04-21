@@ -61,8 +61,8 @@ public class ServiceManager {
 	}
 
 	public String doInputOutputHandler() {
-		InputOutputHandler ioc = new InputOutputHandler();
-		String inputOutputConfig = gson.toJson(ioc.inputOutputHandler(botenSwagger));
+		InputOutputHandler ioc = new InputOutputHandler(botenSwagger);
+		String inputOutputConfig = gson.toJson(ioc.getRes());
 		botenSwagger.setInputOutputConfig(new JSONObject(inputOutputConfig));
 		return botenSwagger.getInputOutputConfig().toString(2);
 	}
@@ -74,9 +74,9 @@ public class ServiceManager {
 	}
 
 	public String doChatbotConfigurator() {
-		ChatbotConfigurator cc = new ChatbotConfigurator();
+		ChatbotConfigurator cc = new ChatbotConfigurator(botenSwagger);
 		RasaConfigurator rc = new RasaConfigurator();
-		String chatbotConfigurator = gson.toJson(cc.chatbotConfigurator(botenSwagger));
+		String chatbotConfigurator = gson.toJson(cc.getConfig());
 		botenSwagger.setBotenConfig(new JSONObject(chatbotConfigurator));
 		botenSwagger.setNlu(rc.nluConfigurator(botenSwagger.getInputOutputConfig()));
 		botenSwagger.setDomain(rc.domainConfigurator(botenSwagger.getInputOutputConfig()));
