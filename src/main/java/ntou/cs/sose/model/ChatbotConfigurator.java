@@ -22,12 +22,15 @@ public class ChatbotConfigurator {
 	private ArrayList<String> allFlow;
 	private HashMap<String, Object> chatbotFlow;
 
-	public HashMap<String, Object> chatbotConfigurator(BotenSwagger req) {
+	public ChatbotConfigurator(BotenSwagger req) {
 		swagger = req.getSwagger();
 		allPath = req.allPath();
 		allFlow = req.allFlow();
 		chatbotFlow = req.chatbotFlow();
 		config = botenConfig();
+	}
+
+	public HashMap<String, Object> getConfig() {
 		return config;
 	}
 
@@ -40,6 +43,7 @@ public class ChatbotConfigurator {
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
 		}
+		config.put("auto", setAutoLocation());
 		try {
 			for (int i = 0; i < allPath.size(); i++) {
 				config.put(BotenSwagger.changeSign((String) allPath.get(i)), setPath((String) allPath.get(i)));
@@ -102,17 +106,18 @@ public class ChatbotConfigurator {
 		return flowParameters;
 	}
 
-	public ArrayList<HashMap<String, Object>> getResponseToSlotsGetSlots(HashMap<String, Object> flowObj, String flowName) {
+	public ArrayList<HashMap<String, Object>> getResponseToSlotsGetSlots(HashMap<String, Object> flowObj,
+			String flowName) {
 		ArrayList<HashMap<String, Object>> allFlow = new ArrayList<HashMap<String, Object>>();
-		ArrayList<String> path =  (ArrayList<String>) flowObj.get(flowName);
+		ArrayList<String> path = (ArrayList<String>) flowObj.get(flowName);
 		for (int i = 0; i < path.size(); i++) {
 			HashMap<String, Object> flow = new HashMap<String, Object>();
 			flow.put("intent", BotenSwagger.changeSign((String) path.get(i)));
 			try {
 				ArrayList<Collection> responseToSlots = JsonPath.read(swagger.toString(), "$.paths.['" + path.get(i)
 						+ "'].get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].responseToSlots");
-				ArrayList<Collection> getSlots = JsonPath.read(swagger.toString(),
-						"$.paths.['" + path.get(i) + "'].get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
+				ArrayList<Collection> getSlots = JsonPath.read(swagger.toString(), "$.paths.['" + path.get(i)
+						+ "'].get.x-chatbotFlow.[?(@.flowName==\"" + flowName + "\")].getSlots");
 				if (!responseToSlots.equals(new ArrayList<Collection>())) {
 					ArrayList<String> responseToSlotsArr = new ArrayList();
 					for (int j = 0; j < responseToSlots.size(); j++) {
@@ -133,6 +138,24 @@ public class ChatbotConfigurator {
 			allFlow.add(flow);
 		}
 		return allFlow;
+	}
+
+	public HashMap<String, String> setAutoLocation() {
+		HashMap<String, String> autoLocation = new HashMap<String, String>();
+		autoLocation.put("latitude,longitude", "");
+		autoLocation.put("latitude", "");
+		autoLocation.put("longitude", "");
+		try {
+			ArrayList<HashMap<String, String>> readValue = JsonPath.read(swagger.toString(),
+					"$..x-bot-utter[?(@.auto)]");
+			for (HashMap<String, String> obj : readValue) {
+				autoLocation.put(obj.get("auto"), obj.get("parameterName"));
+				System.out.println(obj);
+			}
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		}
+		return autoLocation;
 	}
 
 	public ArrayList<HashMap<String, Object>> removeRepeatParameters(HashMap<String, Object> flowObj, String flowName) {
