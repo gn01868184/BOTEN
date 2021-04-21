@@ -26,7 +26,9 @@ public class JsonSchemaValidator implements BotenRule {
 		} catch (ValidationException e) {
 			System.out.print("jsonSchema: ");
 			System.out.println(e.getMessage());
-			chatbotEnabledSwaggerErrors.add(e.getMessage());
+			e.getCausingExceptions().stream().map(ValidationException::getMessage)
+					.forEach(f -> chatbotEnabledSwaggerErrors.add(f));
+			System.out.println(chatbotEnabledSwaggerErrors);
 			return chatbotEnabledSwaggerErrors;
 		}
 	}
