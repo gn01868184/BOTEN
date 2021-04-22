@@ -85,6 +85,7 @@
 
 			// submit the Rasa configuration
 			$(document).on('click', '#submitConfig', function() {
+				document.getElementById('rasaConfigButton').innerHTML = "";
 				$.ajax({
 					type: "GET",
 					url: './ChatbotConfigurator',
