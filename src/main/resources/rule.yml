@@ -1,0 +1,7 @@
+applied-rules:
+- ntou.cs.sose.model.rule.SwaggerValidator
+- ntou.cs.sose.model.rule.JsonSchemaValidator
+- ntou.cs.sose.model.rule.InfoChatbotFlowRule
+- ntou.cs.sose.model.rule.PathsChatbotFlowRule
+- ntou.cs.sose.model.rule.UtterAndEntityRule
+- ntou.cs.sose.model.rule.UtterAndEntityCorrespondRule
