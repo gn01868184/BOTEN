@@ -1,12 +1,12 @@
 package ntou.cs.sose.controller;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.Map;
 
 import org.json.JSONObject;
+import org.yaml.snakeyaml.Yaml;
 
 import com.google.gson.Gson;
 
@@ -27,31 +27,30 @@ public class ServiceManager {
 		HashMap<String, Object> chatbotEnabledSwaggerErrors = new HashMap<String, Object>();
 		ArrayList<String> message = new ArrayList<String>();
 
-		try (Scanner r = new Scanner(new FileReader("./rule.txt"))) {
-			while (r.hasNext()) {
-				String rule = r.nextLine();
-				try {
-					Class c = Class.forName(rule);
-					BotenRule obj = (BotenRule) c.newInstance();
-					swaggerChecker.setBotenRule(obj);
-					if (!swaggerChecker.execute(botenSwagger).equals(new ArrayList<String>())) {
-						message.addAll(swaggerChecker.execute(botenSwagger));
-						break;
-					}
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-					message.add("InstantiationException: " + e.getMessage());
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-					message.add("IllegalAccessException: " + e.getMessage());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-					message.add("ClassNotFoundException: " + e.getMessage());
+		InputStream inputStream = getClass().getResourceAsStream("/rule.yml");
+		Yaml yaml = new Yaml();
+		Map<String, ArrayList<String>> data = yaml.load(inputStream);
+		ArrayList<String> rules = data.get("applied-rules");
+		for (String rule : rules) {
+			System.out.println(rule);
+			try {
+				Class c = Class.forName(rule);
+				BotenRule obj = (BotenRule) c.newInstance();
+				swaggerChecker.setBotenRule(obj);
+				if (!swaggerChecker.execute(botenSwagger).equals(new ArrayList<String>())) {
+					message.addAll(swaggerChecker.execute(botenSwagger));
+					break;
 				}
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+				message.add("InstantiationException: " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				message.add("IllegalAccessException: " + e.getMessage());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				message.add("ClassNotFoundException: " + e.getMessage());
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			message.add("FileNotFoundException: " + e.getMessage());
 		}
 
 		chatbotEnabledSwaggerErrors.put("chatbot-enabled swagger errors", message);
