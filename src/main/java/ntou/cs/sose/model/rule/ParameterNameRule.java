@@ -6,8 +6,8 @@ import org.json.JSONObject;
 
 import com.jayway.jsonpath.JsonPath;
 
-public interface ParameterNameRule extends BotenRule{
-	public default boolean checkParameterNames(JSONObject swagger, String path, String params) {
+public abstract class ParameterNameRule implements BotenRule {
+	public boolean checkParameterNames(JSONObject swagger, String path, String params) {
 		try {
 			ArrayList<String> parArr = JsonPath.read(swagger.toString(), "$.paths.['" + path + "']..parameters..name");
 			for (int i = 0; i < parArr.size(); i++) {

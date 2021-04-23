@@ -10,7 +10,7 @@ import com.jayway.jsonpath.JsonPath;
 
 import ntou.cs.sose.entity.BotenSwagger;
 
-public class PathsChatbotFlowRule implements ParameterNameRule {
+public class PathsChatbotFlowRule extends ParameterNameRule {
 	@Override
 	public ArrayList<String> checkRules(BotenSwagger botenSwagger) {
 		JSONObject swagger = botenSwagger.getSwagger();
@@ -54,7 +54,8 @@ public class PathsChatbotFlowRule implements ParameterNameRule {
 						}
 						// Check getSlots_parameterName
 						try {
-							ArrayList<String> flowName = JsonPath.read(flowObj.toString(), "$..[?(@.getSlots)].flowName");
+							ArrayList<String> flowName = JsonPath.read(flowObj.toString(),
+									"$..[?(@.getSlots)].flowName");
 							ArrayList<String> resParameterName = JsonPath.read(flowObj.toString(),
 									"$..[?(@.getSlots)]..parameterName");
 							if (!resParameterName.isEmpty()) {
@@ -90,8 +91,8 @@ public class PathsChatbotFlowRule implements ParameterNameRule {
 
 	public boolean checkFlowParameterNames(JSONObject swagger, String flowName, String params) {
 		try {
-			ArrayList<String> parArr = JsonPath.read(swagger.toString(), "$.paths..x-chatbotFlow[?(@.flowName==\"" + flowName
-					+ "\")].responseToSlots[?(@.parameterName==\"" + params + "\")]");
+			ArrayList<String> parArr = JsonPath.read(swagger.toString(), "$.paths..x-chatbotFlow[?(@.flowName==\""
+					+ flowName + "\")].responseToSlots[?(@.parameterName==\"" + params + "\")]");
 			if (!parArr.isEmpty()) {
 				return true;
 			}

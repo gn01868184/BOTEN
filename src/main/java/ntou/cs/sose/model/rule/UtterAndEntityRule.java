@@ -9,7 +9,7 @@ import com.jayway.jsonpath.JsonPath;
 
 import ntou.cs.sose.entity.BotenSwagger;
 
-public class UtterAndEntityRule implements ParameterNameRule {
+public class UtterAndEntityRule extends ParameterNameRule {
 	@Override
 	public ArrayList<String> checkRules(BotenSwagger botenSwagger) {
 		JSONObject swagger = botenSwagger.getSwagger();
@@ -33,7 +33,8 @@ public class UtterAndEntityRule implements ParameterNameRule {
 
 	}
 
-	public ArrayList<String> checkUtterAndEntity(BotenSwagger botenSwagger, String path, JSONObject getObj, String xName) {
+	public ArrayList<String> checkUtterAndEntity(BotenSwagger botenSwagger, String path, JSONObject getObj,
+			String xName) {
 		ArrayList<String> errorMessages = new ArrayList<String>();
 		JSONObject swagger = botenSwagger.getSwagger();
 		// Check params of x-bot-utter and x-user-entity
