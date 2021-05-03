@@ -49,9 +49,9 @@ public class InputOutputHandler {
 		ArrayList<String> intents = setIntents();
 		ArrayList<String> entities = setEntities();
 		HashMap<String, Object> slots = setSlots();
-		ArrayList<String> actions = setActions();
-		ArrayList<String> forms = setForms();
 		HashMap<String, String> utter = setUtter();
+		ArrayList<String> actions = setActions(utter);
+		ArrayList<String> forms = setForms();
 		domain.put("intents", intents);
 		domain.put("entities", entities);
 		domain.put("slots", slots);
@@ -89,7 +89,7 @@ public class InputOutputHandler {
 		ArrayList<String> inform = setInformIntent();
 		ArrayList<String> autoGetLocation = setAutoGetLocation();
 		for (int i = 0; i < flow.size(); i++) {
-			intent.put("get_" + (String) flow.get(i), setGetIntent((String) flow.get(i)));
+			intent.put("get_api_" + (String) flow.get(i), setGetIntent((String) flow.get(i)));
 			intent.put("parameters_list_" + (String) flow.get(i), setParametersListIntent((String) flow.get(i)));
 			intent.put("fill_parameters_" + (String) flow.get(i), setFillParameters((String) flow.get(i)));
 		}
@@ -236,7 +236,7 @@ public class InputOutputHandler {
 		ArrayList<String> flow = setFlow();
 		ArrayList<String> intents = new ArrayList<String>();
 		for (int i = 0; i < flow.size(); i++) {
-			intents.add("get_" + flow.get(i));
+			intents.add("get_api_" + flow.get(i));
 			intents.add("parameters_list_" + flow.get(i));
 			intents.add("fill_parameters_" + flow.get(i));
 		}
@@ -272,15 +272,15 @@ public class InputOutputHandler {
 		return slots;
 	}
 
-	public ArrayList<String> setActions() {
-		ArrayList<String> entities = setEntities();
+	public ArrayList<String> setActions(HashMap<String, String> utter) {
 		ArrayList<String> actions = new ArrayList<String>();
-		for (int i = 0; i < entities.size(); i++) {
-			actions.add("utter_ask_" + entities.get(i));
+		for ( String key : utter.keySet() ) {
+		    actions.add(key);
 		}
 		actions.add("action_slots_values");
 		actions.add("action_use_api");
 		actions.add("action_auto_location");
+		actions.add("action_set_default");
 		return actions;
 	}
 
@@ -310,9 +310,12 @@ public class InputOutputHandler {
 	public HashMap<String, Object> setIntoPath(String flow) {
 		ArrayList<String> actions = new ArrayList<String>();
 		HashMap<String, Object> intoPath = new HashMap<String, Object>();
+		actions.add("action_set_default");
 		actions.add("parameters_form");
 		actions.add("form{\"name\": \"parameters_form\"}");
 		actions.add("form{\"name\": null}");
+		actions.add("action_slots_values");
+		actions.add("action_use_api");
 		intoPath.put("fill_parameters_" + flow, actions);
 		return intoPath;
 	}
@@ -329,7 +332,7 @@ public class InputOutputHandler {
 		ArrayList<String> actions = new ArrayList<String>();
 		HashMap<String, Object> usePath = new HashMap<String, Object>();
 		actions.add("action_use_api");
-		usePath.put("get_" + flow, actions);
+		usePath.put("get_api_" + flow, actions);
 		return usePath;
 	}
 
