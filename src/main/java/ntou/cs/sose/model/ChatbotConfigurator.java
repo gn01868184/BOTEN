@@ -44,6 +44,7 @@ public class ChatbotConfigurator {
 			System.out.println(e.getMessage());
 		}
 		config.put("auto", setAutoLocation());
+		config.put("default", setDefaultParameters());
 		try {
 			for (int i = 0; i < allPath.size(); i++) {
 				config.put(BotenSwagger.changeSign((String) allPath.get(i)), setPath((String) allPath.get(i)));
@@ -148,6 +149,7 @@ public class ChatbotConfigurator {
 		try {
 			ArrayList<HashMap<String, String>> readValue = JsonPath.read(swagger.toString(),
 					"$..x-bot-utter[?(@.auto)]");
+			System.out.println(readValue);
 			for (HashMap<String, String> obj : readValue) {
 				autoLocation.put(obj.get("auto"), obj.get("parameterName"));
 				System.out.println(obj);
@@ -156,6 +158,22 @@ public class ChatbotConfigurator {
 			System.out.println(e.getMessage());
 		}
 		return autoLocation;
+	}
+	
+	public HashMap<String, String> setDefaultParameters() {
+		HashMap<String, String> defaultParameters = new HashMap<String, String>();
+		try {
+			ArrayList<HashMap<String, String>> readValue = JsonPath.read(swagger.toString(),
+					"$..x-bot-utter[?(@.default)]");
+			System.out.println(readValue);
+			for (HashMap<String, String> obj : readValue) {
+				defaultParameters.put(obj.get("parameterName"), obj.get("default"));
+				System.out.println(obj);
+			}
+		} catch (ClassCastException e) {
+			System.out.println(e.getMessage());
+		}
+		return defaultParameters;
 	}
 
 	public ArrayList<HashMap<String, Object>> removeRepeatParameters(HashMap<String, Object> flowObj, String flowName) {
