@@ -23,6 +23,7 @@ public class ServiceManager {
 
 	public String doSwaggerCheck(String swaggerURL) {
 		botenSwagger = new BotenSwagger(swaggerURL);
+		System.out.println(botenSwagger.getSwagger());
 		SwaggerChecker swaggerChecker = new SwaggerChecker();
 		HashMap<String, Object> chatbotEnabledSwaggerErrors = new HashMap<String, Object>();
 		ArrayList<String> message = new ArrayList<String>();
