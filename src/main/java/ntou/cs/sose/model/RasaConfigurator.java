@@ -47,11 +47,13 @@ public class RasaConfigurator {
 			domain += "    type: " + type + "\n";
 		}
 		JSONObject responses = (JSONObject) domainJsonObject.get("utter");
-		domain += "responses:\n";
-		for (String utter : responses.keySet()) {
-			domain += "  " + utter + ":\n";
-			String text = responses.getString(utter);
-			domain += "  - text: " + text + "\n";
+		if (responses.length() != 0) {
+			domain += "responses:\n";
+			for (String utter : responses.keySet()) {
+				domain += "  " + utter + ":\n";
+				String text = responses.getString(utter);
+				domain += "  - text: " + text + "\n";
+			}
 		}
 		JSONArray actions = (JSONArray) domainJsonObject.get("actions");
 		domain += "actions:\n" + myArrayToString(actions);
