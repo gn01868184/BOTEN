@@ -62,10 +62,8 @@ public class ChatbotConfigurator {
 		HashMap<String, Object> resultObj = gson.fromJson(result, new TypeToken<HashMap<String, Object>>() {
 		}.getType());
 		pathObj.put("pathName", pathName);
-		System.out.println(pathObj);
 		pathObj.put("parameters", getParameters(pathName));
 		pathObj.put("x-bot-jsonpPath-result", resultObj);
-		System.out.println(pathObj);
 		return pathObj;
 	}
 
