@@ -45,19 +45,11 @@ public class ChatbotConfigurator {
 		}
 		config.put("auto", setAutoLocation());
 		config.put("default", setDefaultParameters());
-		try {
-			for (int i = 0; i < allPath.size(); i++) {
-				config.put(BotenSwagger.changeSign((String) allPath.get(i)), setPath((String) allPath.get(i)));
-			}
-		} catch (JSONException e) {
-			System.out.println(e.getMessage());
+		for (int i = 0; i < allPath.size(); i++) {
+			config.put(BotenSwagger.changeSign((String) allPath.get(i)), setPath((String) allPath.get(i)));
 		}
-		try {
-			for (int i = 0; i < allFlow.size(); i++) {
-				config.put((String) allFlow.get(i), setFlowParameters(chatbotFlow, (String) allFlow.get(i)));
-			}
-		} catch (JSONException e) {
-			System.out.println(e.getMessage());
+		for (int i = 0; i < allFlow.size(); i++) {
+			config.put((String) allFlow.get(i), setFlowParameters(chatbotFlow, (String) allFlow.get(i)));
 		}
 		return config;
 	}
@@ -70,16 +62,16 @@ public class ChatbotConfigurator {
 		HashMap<String, Object> resultObj = gson.fromJson(result, new TypeToken<HashMap<String, Object>>() {
 		}.getType());
 		pathObj.put("pathName", pathName);
+		System.out.println(pathObj);
 		pathObj.put("parameters", getParameters(pathName));
 		pathObj.put("x-bot-jsonpPath-result", resultObj);
+		System.out.println(pathObj);
 		return pathObj;
 	}
 
 	public ArrayList<HashMap<String, Object>> getParameters(String pathName) {
 		ArrayList<HashMap<String, Object>> pathObj = new ArrayList<HashMap<String, Object>>();
 		ArrayList<String> utterParameterName = new ArrayList<String>();
-		JSONArray parameters = (JSONArray) ((JSONObject) ((JSONObject) ((JSONObject) swagger.get("paths"))
-				.get(pathName)).get("get")).get("parameters");
 		try {
 			utterParameterName = JsonPath.read(swagger.toString(),
 					"$.paths.['" + pathName + "'].get.x-bot-utter[*].parameterName");
@@ -88,14 +80,19 @@ public class ChatbotConfigurator {
 		} catch (PathNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
-		for (int i = 0; i < parameters.length(); i++) {
-			if (utterParameterName.contains(((JSONObject) parameters.get(i)).get("name"))) {
-				HashMap<String, Object> parametersObj = new HashMap<String, Object>();
-				parametersObj.put("in", ((JSONObject) parameters.get(i)).get("in"));
-				parametersObj.put("name", ((JSONObject) parameters.get(i)).get("name"));
-				pathObj.add(parametersObj);
+		try {
+			JSONArray parameters = (JSONArray) ((JSONObject) ((JSONObject) ((JSONObject) swagger.get("paths"))
+					.get(pathName)).get("get")).get("parameters");
+			for (int i = 0; i < parameters.length(); i++) {
+				if (utterParameterName.contains(((JSONObject) parameters.get(i)).get("name"))) {
+					HashMap<String, Object> parametersObj = new HashMap<String, Object>();
+					parametersObj.put("in", ((JSONObject) parameters.get(i)).get("in"));
+					parametersObj.put("name", ((JSONObject) parameters.get(i)).get("name"));
+					pathObj.add(parametersObj);
+				}
 			}
-
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
 		}
 		return pathObj;
 	}
@@ -159,7 +156,7 @@ public class ChatbotConfigurator {
 		}
 		return autoLocation;
 	}
-	
+
 	public HashMap<String, String> setDefaultParameters() {
 		HashMap<String, String> defaultParameters = new HashMap<String, String>();
 		try {
