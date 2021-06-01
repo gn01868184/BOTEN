@@ -144,10 +144,7 @@
 									
 								},
 								"examples": [],
-								"required": [
-									"parameterName",
-									"utter"
-								],
+								"required": [],
 								"properties": {
 									"parameterName": {
 										"$id": "#/definitions/chatbot/properties/x-bot-utter/anyOf/0/properties/parameterName",
@@ -167,6 +164,26 @@
 										"default": "",
 										"examples": [
 											"What do you want to query ?"
+										]
+									},
+									"auto": {
+										"$id": "#/definitions/chatbot/properties/x-bot-utter/anyOf/0/properties/auto",
+										"type": "string",
+										"title": "The flowName schema",
+										"description": "An explanation about the purpose of this instance.",
+										"default": "",
+										"examples": [
+											"latitude,longitude"
+										]
+									},
+									"default": {
+										"$id": "#/definitions/chatbot/properties/x-bot-utter/anyOf/0/properties/default",
+										"type": "string",
+										"title": "The flowName schema",
+										"description": "An explanation about the purpose of this instance.",
+										"default": "",
+										"examples": [
+											"RQQRFNZSMYRZDWCAQFC5RNAM0SWIAONSWWRYCR2PJXW5TQXR"
 										]
 									}
 								},
@@ -189,10 +206,7 @@
 									
 								},
 								"examples": [],
-								"required": [
-									"parameterName",
-									"entityValue"
-								],
+								"required": [],
 								"properties": {
 									"flowName": {
 										"$id": "#/definitions/chatbot/properties/x-user-entity/items/anyOf/0/properties/parameterName",
