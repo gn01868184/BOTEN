@@ -15,11 +15,12 @@ public class BotenSwagger {
 	private String url;
 	private JSONObject swagger;
 	private JSONObject chatbotEnabledSwaggerErrors;
-	private JSONObject inputOutputConfig;
+	private String inputOutputConfig;
 	private JSONObject botenConfig;
 	private String nlu;
 	private String domain;
 	private String stories;
+	private String rules;
 
 	public BotenSwagger(String url) {
 		this.url = url;
@@ -51,11 +52,11 @@ public class BotenSwagger {
 		this.chatbotEnabledSwaggerErrors = chatbotEnabledSwaggerErrors;
 	}
 
-	public JSONObject getInputOutputConfig() {
+	public String getInputOutputConfig() {
 		return inputOutputConfig;
 	}
 
-	public void setInputOutputConfig(JSONObject inputOutputConfig) {
+	public void setInputOutputConfig(String inputOutputConfig) {
 		this.inputOutputConfig = inputOutputConfig;
 	}
 
@@ -89,6 +90,14 @@ public class BotenSwagger {
 
 	public void setStories(String stories) {
 		this.stories = stories;
+	}
+
+	public String getRules() {
+		return rules;
+	}
+
+	public void setRules(String rules) {
+		this.rules = rules;
 	}
 
 	public ArrayList<String> allPath() {
