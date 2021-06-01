@@ -93,9 +93,10 @@
 					success: function(data) {
 						$('#rasaConfigButton').append(
 							'<a class="btn btn-primary" href="./botenConfig.json" target="_blank" role="button">botenConfig.json</a>' +
-							'<a class="btn btn-primary" href="./nlu.md" target="_blank" role="button">nlu.md</a>' +
+							'<a class="btn btn-primary" href="./nlu.yml" target="_blank" role="button">nlu.yml</a>' +
 							'<a class="btn btn-primary" href="./domain.yml" target="_blank" role="button">domain.yml</a>' +
-							'<a class="btn btn-primary" href="./stories.md" target="_blank" role="button">stories.md</a>');
+							'<a class="btn btn-primary" href="./stories.yml" target="_blank" role="button">stories.yml</a>'+
+							'<a class="btn btn-primary" href="./rules.yml" target="_blank" role="button">rules.yml</a>');
 					},
 					error: function() {
 						alert('Rasa configuration error');
