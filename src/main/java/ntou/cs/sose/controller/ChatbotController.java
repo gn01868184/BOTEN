@@ -48,25 +48,25 @@ public class ChatbotController {
 		return serviceManager.showBotenConfig();
 	}
 
-	@GetMapping(value = "/nlu.yml", produces = "application/json")
+	@GetMapping(value = "/nlu.yml", produces = "text/yaml")
 	@ResponseBody
 	public String showNlu() {
 		return serviceManager.showNlu();
 	}
 
-	@GetMapping(value = "/domain.yml", produces = "application/json")
+	@GetMapping(value = "/domain.yml", produces = "text/yaml")
 	@ResponseBody
 	public String showDomain() {
 		return serviceManager.showDomain();
 	}
 
-	@GetMapping(value = "/stories.yml", produces = "application/json")
+	@GetMapping(value = "/stories.yml", produces = "text/yaml")
 	@ResponseBody
 	public String showStories() {
 		return serviceManager.showStories();
 	}
 	
-	@GetMapping(value = "/rules.yml", produces = "application/json")
+	@GetMapping(value = "/rules.yml", produces = "text/yaml")
 	@ResponseBody
 	public String showRules() {
 		return serviceManager.showRules();
