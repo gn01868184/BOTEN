@@ -102,6 +102,7 @@ public class DomainHandler extends InputOutputHandler {
 		for (String path : allPath) {
 			HashMap<String, Object> formObject = new HashMap<String, Object>();
 			HashMap<String, Object> required_slots = new HashMap<String, Object>();
+			String changedPath = BotenSwagger.changeSign(path);
 			for (String par : getParameters(path)) {
 				ArrayList<Object> parametersArray = new ArrayList<Object>();
 				HashMap<String, String> parametersObject = new HashMap<String, String>();
@@ -111,7 +112,7 @@ public class DomainHandler extends InputOutputHandler {
 				required_slots.put(par, parametersArray);
 			}
 			formObject.put("required_slots", required_slots);
-			form.put(path + "_form", formObject);
+			form.put(changedPath + "_form", formObject);
 		}
 
 		for (String flow : allFlow) {

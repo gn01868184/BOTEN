@@ -30,9 +30,11 @@ public class RulesHandler extends InputOutputHandler {
 
 			LinkedHashMap<String, Object> submitFormRule = new LinkedHashMap<String, Object>();
 			HashMap<String, Object> condition = new HashMap<String, Object>();
+			ArrayList<Object> conditionArray = new ArrayList<Object>();
 			submitFormRule.put("rule", "Submit " + flow.get(i) + "_form");
-			condition.put("active_loop", flow.get(i) + "__form");
-			submitFormRule.put("condition", condition);
+			condition.put("active_loop", flow.get(i) + "_form");
+			conditionArray.add(condition);
+			submitFormRule.put("condition", conditionArray);
 			submitFormRule.put("steps", post_submitForm((String) flow.get(i)));
 
 			HashMap<String, Object> parametersListRule = new HashMap<String, Object>();
