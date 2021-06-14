@@ -56,6 +56,11 @@ public class RulesHandler extends InputOutputHandler {
 		autoLocationRule.put("steps", post_autoLocationPath());
 		rule.add(autoLocationRule);
 
+		HashMap<String, Object> fallbackRule = new HashMap<String, Object>();
+		fallbackRule.put("rule", "Ask the user to rephrase whenever they send a message with low NLU confidence");
+		fallbackRule.put("steps", post_fallback());
+		rule.add(fallbackRule);
+		
 		rules.put("version", "2.0");
 		rules.put("rules", rule);
 		return rules;
@@ -141,6 +146,17 @@ public class RulesHandler extends InputOutputHandler {
 		HashMap<String, String> action = new HashMap<String, String>();
 		intent.put("intent", "auto_get_location");
 		action.put("action", "action_auto_location");
+		steps.add(intent);
+		steps.add(action);
+		return steps;
+	}
+	
+	public ArrayList<Object> post_fallback() {
+		ArrayList<Object> steps = new ArrayList<Object>();
+		HashMap<String, String> intent = new HashMap<String, String>();
+		HashMap<String, String> action = new HashMap<String, String>();
+		intent.put("intent", "nlu_fallback");
+		action.put("action", "utter_please_rephrase");
 		steps.add(intent);
 		steps.add(action);
 		return steps;

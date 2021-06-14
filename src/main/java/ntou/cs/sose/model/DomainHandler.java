@@ -150,6 +150,11 @@ public class DomainHandler extends InputOutputHandler {
 				System.out.println(e.getMessage());
 			}
 		}
+		HashMap<String, String> text = new HashMap<String, String>();
+		text.put("text", "I'm sorry, I didn't quite understand that. Could you rephrase?");
+		ArrayList<Object> textObject = new ArrayList<Object>();
+		textObject.add(text);
+		utter.put("utter_please_rephrase", textObject);
 		return utter;
 	}
 
