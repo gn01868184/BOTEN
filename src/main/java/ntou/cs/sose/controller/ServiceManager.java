@@ -21,6 +21,7 @@ import ntou.cs.sose.model.InputOutputHandler;
 import ntou.cs.sose.model.NluHandler;
 import ntou.cs.sose.model.RulesHandler;
 import ntou.cs.sose.model.StroiesHandler;
+import ntou.cs.sose.model.TitleConfigurator;
 import ntou.cs.sose.model.rule.BotenRule;
 import ntou.cs.sose.model.rule.SwaggerChecker;
 
@@ -136,5 +137,11 @@ public class ServiceManager {
 
 	public String showRules() {
 		return botenSwagger.getRules();
+	}
+
+	public String showTitle() {
+		TitleConfigurator titleConfigurator = new TitleConfigurator(botenSwagger);
+		String title = gson.toJson(titleConfigurator.getTitle());
+		return title;
 	}
 }
