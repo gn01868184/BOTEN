@@ -4,19 +4,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/chatbot")
 public class ChatbotController {
 	ServiceManager serviceManager = new ServiceManager();
-
-	@RequestMapping("/home")
-	public String greeting() {
-		return "index";
-	}
 
 	@GetMapping(value = "/SwaggerCheck", produces = "application/json")
 	@ResponseBody
@@ -65,10 +58,16 @@ public class ChatbotController {
 	public String showStories() {
 		return serviceManager.showStories();
 	}
-	
+
 	@GetMapping(value = "/rules.yml", produces = "text/yaml")
 	@ResponseBody
 	public String showRules() {
 		return serviceManager.showRules();
+	}
+
+	@GetMapping(value = "/title.json", produces = "application/json")
+	@ResponseBody
+	public String showTitle() {
+		return serviceManager.showTitle();
 	}
 }
