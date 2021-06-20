@@ -40,17 +40,17 @@ public class NluHandler extends InputOutputHandler {
 
 		for (String path : allPath) {
 			LinkedHashMap<String, String> getApiPath = new LinkedHashMap<String, String>();
-			getApiPath.put("intent", "get_api_" + path);
+			getApiPath.put("intent", "get_api_" + BotenSwagger.changeSign(path));
 			getApiPath.put("examples", post_getIntent(path));
 			nluArrayList.add(getApiPath);
 
 			LinkedHashMap<String, String> parametersListPath = new LinkedHashMap<String, String>();
-			parametersListPath.put("intent", "parameters_list_" + path);
+			parametersListPath.put("intent", "parameters_list_" + BotenSwagger.changeSign(path));
 			parametersListPath.put("examples", post_parametersListIntent(path));
 			nluArrayList.add(parametersListPath);
 
 			LinkedHashMap<String, String> fillParametersPath = new LinkedHashMap<String, String>();
-			fillParametersPath.put("intent", "fill_parameters_" + path);
+			fillParametersPath.put("intent", "fill_parameters_" + BotenSwagger.changeSign(path));
 			fillParametersPath.put("examples", post_fillParameters(path));
 			nluArrayList.add(fillParametersPath);
 		}
@@ -132,8 +132,8 @@ public class NluHandler extends InputOutputHandler {
 			}
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
-			train += "- I want to get " + path + "\n";
-			train += "- I want to use " + path + "\n";
+			train += "- I want to get " + BotenSwagger.changeSign(path) + "\n";
+			train += "- I want to use " + BotenSwagger.changeSign(path) + "\n";
 		}
 		return train;
 	}
@@ -148,8 +148,8 @@ public class NluHandler extends InputOutputHandler {
 			}
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
-			train += "- I want to see the " + path + " parameters list\n";
-			train += "- see the " + path + " parameters list\n";
+			train += "- I want to see the " + BotenSwagger.changeSign(path) + " parameters list\n";
+			train += "- see the " + BotenSwagger.changeSign(path) + " parameters list\n";
 		}
 		return train;
 	}
@@ -164,8 +164,8 @@ public class NluHandler extends InputOutputHandler {
 			}
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
-			train += "- Fill in the " + path + " parameters\n";
-			train += "- Fill " + path + "\n";
+			train += "- Fill in the " + BotenSwagger.changeSign(path) + " parameters\n";
+			train += "- Fill " + BotenSwagger.changeSign(path) + "\n";
 		}
 		return train;
 	}
