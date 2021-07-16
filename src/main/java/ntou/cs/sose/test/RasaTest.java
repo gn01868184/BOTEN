@@ -19,12 +19,13 @@ public class RasaTest {
 
 	public static void main(String[] args) {
 		BotenSwagger botenSwagger = new BotenSwagger(
-				"https://gn01868184.github.io/jsonExample.github.io/foursquareSwagger.json");
+				"https://gn01868184.github.io/BOTEN-Enable-Swagger/case1_foursquare.json");
 		NluHandler nluHandler = new NluHandler(botenSwagger);
 		DomainHandler domainHandler = new DomainHandler(botenSwagger);
 		StroiesHandler stroiesHandler = new StroiesHandler(botenSwagger);
 		RulesHandler rulesHandler = new RulesHandler(botenSwagger);
 		HashMap<String, Object> rasaConfig = new HashMap<String, Object>();
+		/*
 		rasaConfig.put("nlu", nluHandler.getNlu());
 		rasaConfig.put("domain", domainHandler.getDomain());
 		rasaConfig.put("stories", stroiesHandler.getStroies());
@@ -42,7 +43,8 @@ public class RasaTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		 */
+		System.out.println(nluHandler.getNlu());
 	}
 
 }
