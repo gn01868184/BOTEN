@@ -41,14 +41,9 @@ public class RulesHandler extends InputOutputHandler {
 			parametersListRule.put("rule", "See " + flow.get(i) + " parameters list");
 			parametersListRule.put("steps", post_parametersList((String) flow.get(i)));
 
-			HashMap<String, Object> usePathRule = new HashMap<String, Object>();
-			usePathRule.put("rule", "Use " + flow.get(i));
-			usePathRule.put("steps", post_usePath((String) flow.get(i)));
-
 			rule.add(activateFormRule);
 			rule.add(submitFormRule);
 			rule.add(parametersListRule);
-			rule.add(usePathRule);
 		}
 
 		HashMap<String, Object> autoLocationRule = new HashMap<String, Object>();
@@ -73,7 +68,7 @@ public class RulesHandler extends InputOutputHandler {
 		HashMap<String, String> setDefaultAction = new HashMap<String, String>();
 		HashMap<String, String> formaction = new HashMap<String, String>();
 		HashMap<String, String> activeLoop = new HashMap<String, String>();
-		intent.put("intent", "fill_parameters_" + flow);
+		intent.put("intent", "get_api_" + flow);
 		setIntentAction.put("action", "action_set_intent");
 		setDefaultAction.put("action", "action_set_default");
 		formaction.put("action", flow + "_form");
@@ -124,17 +119,6 @@ public class RulesHandler extends InputOutputHandler {
 		HashMap<String, String> action = new HashMap<String, String>();
 		intent.put("intent", "parameters_list_" + flow);
 		action.put("action", "action_slots_values");
-		steps.add(intent);
-		steps.add(action);
-		return steps;
-	}
-
-	public ArrayList<Object> post_usePath(String flow) {
-		ArrayList<Object> steps = new ArrayList<Object>();
-		HashMap<String, String> intent = new HashMap<String, String>();
-		HashMap<String, String> action = new HashMap<String, String>();
-		intent.put("intent", "get_api_" + flow);
-		action.put("action", "action_use_api");
 		steps.add(intent);
 		steps.add(action);
 		return steps;

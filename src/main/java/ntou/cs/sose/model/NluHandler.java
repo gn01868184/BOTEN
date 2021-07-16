@@ -48,11 +48,6 @@ public class NluHandler extends InputOutputHandler {
 			parametersListPath.put("intent", "parameters_list_" + BotenSwagger.changeSign(path));
 			parametersListPath.put("examples", post_parametersListIntent(path));
 			nluArrayList.add(parametersListPath);
-
-			LinkedHashMap<String, String> fillParametersPath = new LinkedHashMap<String, String>();
-			fillParametersPath.put("intent", "fill_parameters_" + BotenSwagger.changeSign(path));
-			fillParametersPath.put("examples", post_fillParameters(path));
-			nluArrayList.add(fillParametersPath);
 		}
 
 		for (String flow : allFlow) {
@@ -65,11 +60,6 @@ public class NluHandler extends InputOutputHandler {
 			parametersListPath.put("intent", "parameters_list_" + flow);
 			parametersListPath.put("examples", post_flow_parametersListIntent(flow));
 			nluArrayList.add(parametersListPath);
-
-			LinkedHashMap<String, String> fillParametersPath = new LinkedHashMap<String, String>();
-			fillParametersPath.put("intent", "fill_parameters_" + flow);
-			fillParametersPath.put("examples", post_flow_fillParameters(flow));
-			nluArrayList.add(fillParametersPath);
 		}
 
 		LinkedHashMap<String, String> inform = new LinkedHashMap<String, String>();
@@ -154,22 +144,6 @@ public class NluHandler extends InputOutputHandler {
 		return train;
 	}
 
-	public String post_fillParameters(String path) {
-		String train = "";
-		try {
-			JSONArray templates = swagger.getJSONObject("paths").getJSONObject(path).getJSONObject("get")
-					.getJSONObject("x-input-template").getJSONArray("fillParameter");
-			for (Object template : templates) {
-				train += "- " + template + "\n";
-			}
-		} catch (JSONException e) {
-			System.out.println(e.getMessage());
-			train += "- Fill in the " + BotenSwagger.changeSign(path) + " parameters\n";
-			train += "- Fill " + BotenSwagger.changeSign(path) + "\n";
-		}
-		return train;
-	}
-
 	public String post_flow_getIntent(String flow) {
 		String train = "";
 		try {
@@ -191,29 +165,18 @@ public class NluHandler extends InputOutputHandler {
 		try {
 			ArrayList<String> templates = JsonPath.read(swagger.toString(),
 					"$.info.x-chatbotFlow[?(@.flowName==\"" + flow + "\")].x-input-template.parameterList[*]");
-			for (String template : templates) {
-				train += "- " + template + "\n";
+			if(templates.equals(new ArrayList<String>())) {
+				train += "- I want to see the " + flow + " parameters list\n";
+				train += "- see the " + flow + " parameters list\n";
 			}
-		} catch (JSONException e) {
-			System.out.println(e.getMessage());
-			train += "- I want to see the " + flow + " parameters list\n";
-			train += "- see the " + flow + " parameters list\n";
-		}
-		return train;
-	}
+			else {
+				for (String template : templates) {
+					train += "- " + template + "\n";
+				}
+			}
 
-	public String post_flow_fillParameters(String flow) {
-		String train = "";
-		try {
-			ArrayList<String> templates = JsonPath.read(swagger.toString(),
-					"$.info.x-chatbotFlow[?(@.flowName==\"" + flow + "\")].x-input-template.fillParameter[*]");
-			for (String template : templates) {
-				train += "- " + template + "\n";
-			}
 		} catch (JSONException e) {
 			System.out.println(e.getMessage());
-			train += "- Fill in the " + flow + " parameters\n";
-			train += "- Fill " + flow + "\n";
 		}
 		return train;
 	}

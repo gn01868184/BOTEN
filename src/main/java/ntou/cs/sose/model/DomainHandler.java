@@ -53,7 +53,6 @@ public class DomainHandler extends InputOutputHandler {
 		for (int i = 0; i < flow.size(); i++) {
 			intents.add("get_api_" + flow.get(i));
 			intents.add("parameters_list_" + flow.get(i));
-			intents.add("fill_parameters_" + flow.get(i));
 		}
 		intents.add("inform");
 		intents.add("auto_get_location");
